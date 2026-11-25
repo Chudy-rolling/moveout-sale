@@ -76,6 +76,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
       <a href="./" style="color:var(--mute);font-size:14px">查看买家页 →</a>
       <div class="row"><button class="btn" id="shopBtn">卖家信息</button><button class="btn" id="reload">刷新</button><button class="btn main" id="addBtn">＋ 新增物品</button></div>
     </div>
+    <input id="q" type="search" placeholder="搜索编号、名称、描述…" autocomplete="off" aria-label="搜索物品" style="margin-top:14px">
     <div class="list" id="list"></div>
     <p class="hint" style="margin-top:22px">改状态会自动记日期：改成「在售」记上架日期，改成「已售出」记售出日期。每次保存后，买家页约 1 分钟更新。小红书图需要更新时，跟 Claude 说「出图」。</p>
     <p class="hint"><button class="btn small" id="logout">退出登录</button></p>
@@ -118,7 +119,27 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 const md=s=>s?(+s.slice(5,7))+"/"+(+s.slice(8,10)):"";
-let token="",data=null,sha="",editing=null,photos=[],busy=false;
+let token="",data=null,sha="",editing=null,photos=[],busy=false,query="";
+const SYN={"花":"植物","绿植":"植物","盆栽":"植物","草":"植物","肥":"肥料 液体肥","肥料":"肥","化肥":"肥","营养土":"土","植料":"土","营养液":"液体肥","灯":"灯泡 led","补光":"生长灯","水壶":"浇水壶","浇花":"浇水壶","浇水":"浇水壶","喷壶":"浇水壶","架子":"架","花架":"植物架","黑胶":"唱片","音乐":"唱片 唱片机","音响":"唱片机","播放器":"唱片机","家电":"电器","土":"土 植料 珍珠岩","工具":"园艺套装","宜家":"ikea","绿萝":"pothos","免费送":"免费"};
+const norm=s=>String(s??"").toLowerCase().replace(/[！-～]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xfee0)).replace(/[\s,，。、;；:：()（）\-_/·.]+/g,"");
+function hay(i){return norm([i.code,i.name,i.category,i.condition,i.note,i.status,+i.price===0?"免费":""].join(" "))}
+function search(list,q){
+  q=String(q||"").trim();if(!q)return list;
+  let max=null,m=q.match(/\$?\s*(\d+(?:\.\d+)?)\s*(刀|美元|元|块)?\s*(以下|以内|之内|内|下)/)||q.match(/[<＜≤]\s*\$?\s*(\d+(?:\.\d+)?)/);
+  if(m){max=+m[1];q=q.replace(m[0]," ")}
+  const free=/免费|白送|0元|\$0/.test(q);if(free)q=q.replace(/免费|白送|0元|\$0/g," ");
+  const terms=q.split(/[\s,，、]+/).map(norm).filter(Boolean);
+  const pool=list.filter(i=>(max==null||(i.price!=null&&+i.price<=max))&&(!free||+i.price===0));
+  if(!terms.length)return pool;
+  const hit=(h,t)=>h.includes(t)||(SYN[t]||"").split(" ").some(s=>s&&h.includes(norm(s)));
+  const exact=pool.filter(i=>{const h=hay(i);return terms.every(t=>hit(h,t))});
+  if(exact.length)return exact;
+  const chars=[...new Set([...terms.join("")].filter(c=>/[\u4e00-\u9fff]/.test(c)))];
+  if(chars.length<2)return [];
+  return pool.map(i=>{const h=hay(i);return [i,chars.filter(c=>h.includes(c)).length/chars.length]})
+    .filter(x=>x[1]>=0.6).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+}
+
 const previews={};
 const imgSrc=p=>previews[p]||(/^img\/[\w.-]+$/.test(p)?p+"?v="+(data?.shop?.updated||""):"");
 try{token=localStorage.getItem("ms_token")||""}catch(e){}
@@ -163,7 +184,7 @@ function render(){
   $("sVal").textContent="$"+on.reduce((s,i)=>s+(+i.price||0),0);
   const groups=[["在售","已预订"],["待上架"],["已售出","送人/自留"]];
   const names=["在售 / 已预订","待上架","已售出 / 送人"];
-  $("list").innerHTML=groups.map((g,k)=>{const rows=it.filter(i=>g.includes(i.status)).sort((a,b)=>a.code.localeCompare(b.code));
+  $("list").innerHTML=groups.map((g,k)=>{const rows=search(it.filter(i=>g.includes(i.status)),query).sort((a,b)=>a.code.localeCompare(b.code));
     if(!rows.length)return"";
     return `<div class="grp">${names[k]}（${rows.length}）</div>`+rows.map(i=>{const p=imgSrc((i.photos||[])[0]||"");
     return `<div class="arow">${p?`<img src="${esc(p)}" alt="">`:`<div class="th"></div>`}
@@ -249,6 +270,7 @@ $("form").onsubmit=async e=>{
   $("saveBtn").disabled=false;if(ok)$("edit").close();
 };
 $("addBtn").onclick=()=>openEdit(null);
+$("q").addEventListener("input",e=>{query=e.target.value;render()});
 $("shopBtn").onclick=()=>{const s=data.shop||{};$("sXhs").value=s.xhsUrl||"";$("sContact").value=s.contact||"";$("sPickup").value=s.pickup||"";$("shopErr").textContent="";$("shopDlg").showModal()};
 $("shopCancel").onclick=()=>$("shopDlg").close();
 $("shopForm").onsubmit=async e=>{e.preventDefault();
