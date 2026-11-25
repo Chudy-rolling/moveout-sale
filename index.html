@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>毕业回国清仓</title>
+<meta name="description" content="毕业回国清仓：植物、家具和生活好物低价转出，Jersey City Journal Square 自提。">
+<meta property="og:title" content="毕业回国清仓">
+<meta property="og:description" content="植物、家具和生活好物低价转出，先到先得">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--ink:#18241d;--mute:#5d6b62;--leaf:#1d4a33;--leafInk:#f1f7f2;--sage:#eef4ee;--line:#dbe5dc;--terra:#d85f35;--card:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1a14;--ink:#e6efe8;--mute:#9fb1a5;--leaf:#173a28;--sage:#18261e;--line:#2a3a30;--terra:#e8794f;--card:#142019}}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Noto Sans SC",system-ui,sans-serif;overflow-x:clip}
+h1,h2{font-family:"Noto Serif SC",serif;line-height:1.1;margin:0;text-wrap:balance}
+.band{padding:clamp(24px,4vw,52px) max(5vw,16px)}
+.top{background:var(--leaf);color:var(--leafInk)}
+.wrap{max-width:1240px;margin:0 auto}
+.top h1{font-size:clamp(30px,5vw,48px)}
+.top p{margin:10px 0 0;opacity:.9;max-width:60ch}
+.stats{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:20px}
+.stat b{display:block;font-size:28px;line-height:1.1}
+.stat span{font-size:13px;opacity:.8}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:14px;min-height:40px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:18px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;text-align:left;padding:0;font:inherit;color:inherit;transition:transform .15s}
+.item:hover{transform:translateY(-2px)}
+@media(prefers-reduced-motion:reduce){.item{transition:none}.item:hover{transform:none}}
+.ph{aspect-ratio:4/5;background:var(--sage);position:relative;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .none{position:absolute;inset:0;display:grid;place-items:center;color:var(--mute);font-size:14px}
+.tag{position:absolute;top:12px;left:12px;background:var(--terra);color:#fff;font-weight:700;padding:5px 12px 5px 22px;border-radius:4px 10px 10px 4px;font-size:17px;white-space:nowrap}
+.tag::before{content:"";position:absolute;left:8px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:var(--card)}
+.code{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:2px 8px;border-radius:999px}
+.info{padding:12px 14px 16px;display:grid;gap:4px}
+.info strong{font-size:16px;line-height:1.35}
+.info small{color:var(--mute);font-size:13px}
+.st{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--sage);justify-self:start}
+.st.res{background:#fbe3c8;color:#7a3e05}
+.sold .ph img{filter:grayscale(1);opacity:.55}
+.stamp{position:absolute;inset:0;display:grid;place-items:center}
+.stamp span{border:3px solid var(--terra);color:var(--terra);font-weight:700;font-size:22px;padding:4px 14px;transform:rotate(-12deg);background:var(--card)}
+.empty{padding:48px 16px;text-align:center;color:var(--mute)}
+.note{font-size:13px;color:var(--mute);margin-top:22px}
+dialog{border:0;border-radius:16px;padding:0;max-width:min(560px,94vw);width:100%;background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,14,.55)}
+.dlg{padding:20px;display:grid;gap:12px}
+.shots{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:8px}
+.shots img{flex:none;width:100%;scroll-snap-align:start;aspect-ratio:4/5;object-fit:cover;border-radius:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:10px;padding:10px 16px;min-height:44px;font:inherit;font-weight:500;cursor:pointer;background:var(--sage);color:var(--ink)}
+.btn.main{background:var(--terra);color:#fff}
+.price{font-size:30px;font-weight:700;color:var(--terra);white-space:nowrap}
+.msg{background:var(--sage);border-radius:10px;padding:10px 12px;font-size:14px;user-select:all}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tag{font-size:15px}.info{padding:10px 10px 12px}.info strong{font-size:15px}}
+</style>
+</head>
+<body>
+<header class="band top"><div class="wrap">
+  <h1 id="title">毕业回国清仓</h1>
+  <p id="sub">毕业回国，植物、家具和生活好物低价转出，先到先得</p>
+  <div class="stats">
+    <div class="stat"><b id="sOn">–</b><span>件在售</span></div>
+    <div class="stat"><b id="sSold">–</b><span>件已出</span></div>
+  </div>
+</div></header>
+<main class="band"><div class="wrap">
+  <div class="bar" id="cats"></div>
+  <div class="grid" id="grid"><div class="empty">加载中…</div></div>
+  <p class="note" id="foot"></p>
+</div></main>
+<dialog id="view"><div class="dlg" id="viewBody"></div></dialog>
+<div class="toast" id="toast"></div>
+<script>
+{
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=n=>n==null?"":"$"+n;
+const CATS=["植物/园艺","家具","电器/数码","厨房","服饰鞋包","书/文具","其他"];
+const RANK={"在售":0,"已预订":1,"已售出":2};
+let items=[],shop={},cat="全部",onlyOn=false;
+
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2200)}
+function list(){return items.filter(i=>i.status in RANK).sort((a,b)=>RANK[a.status]-RANK[b.status]||a.code.localeCompare(b.code))}
+
+function render(){
+  $("title").textContent=shop.title||"毕业回国清仓";
+  $("sub").textContent=[shop.sub,shop.pickup].filter(Boolean).join(" · ");
+  const all=list();
+  $("sOn").textContent=all.filter(i=>i.status!=="已售出").length;
+  $("sSold").textContent=all.filter(i=>i.status==="已售出").length;
+  const cats=["全部",...CATS.filter(c=>all.some(i=>i.category===c))];
+  $("cats").innerHTML=cats.map(c=>`<button class="chip" data-c="${esc(c)}" aria-pressed="${c===cat}">${esc(c)}</button>`).join("")+
+    `<button class="chip" id="onlyOn" aria-pressed="${onlyOn}">只看在售</button>`;
+  const shown=all.filter(i=>(cat==="全部"||i.category===cat)&&(!onlyOn||i.status!=="已售出"));
+  $("grid").innerHTML=shown.length?shown.map(i=>{const p=(i.photos||[])[0],sold=i.status==="已售出";
+    return `<button class="item${sold?" sold":""}" data-code="${esc(i.code)}">
+    <div class="ph">${p?`<img src="${esc(p)}" alt="${esc(i.name)}" loading="lazy">`:`<div class="none">照片稍后补上</div>`}
+    <span class="tag">${esc(money(i.price))}</span><span class="code">${esc(i.code)}</span>
+    ${sold?`<div class="stamp"><span>已售出</span></div>`:""}</div>
+    <div class="info"><strong>${esc(i.name)}</strong>${i.condition?`<small>${esc(i.condition)}</small>`:""}
+    ${i.status==="已预订"?`<span class="st res">已预订</span>`:""}</div></button>`}).join(""):`<div class="empty">这个分类暂时没有在售的东西。</div>`;
+  const upd=shop.updated?new Date(shop.updated).toLocaleString("zh-CN",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"";
+  $("foot").textContent=(shop.contact?`想要哪件？点开物品复制消息，私信 ${shop.contact}。`:"想要哪件？点开物品复制消息，去小红书私信我。")+(upd?` 最后更新：${upd}`:"");
+}
+
+function openView(code){
+  const i=items.find(x=>x.code===code);if(!i)return;
+  const sold=i.status==="已售出";
+  const msg=`你好！想要 ${i.code} ${i.name}（${money(i.price)}），请问什么时候方便交易？`;
+  $("viewBody").innerHTML=`${(i.photos||[]).length?`<div class="shots">${i.photos.map(p=>`<img src="${esc(p)}" alt="">`).join("")}</div>`:""}
+  <div class="row" style="justify-content:space-between"><h2 style="font-size:24px">${esc(i.name)}</h2><span class="price">${esc(money(i.price))}</span></div>
+  <div class="row"><span class="st${i.status==="已预订"?" res":""}">${esc(i.status)}</span><small style="color:var(--mute)">${esc(i.code)} · ${esc(i.category)}${i.condition?" · "+esc(i.condition):""}</small></div>
+  ${i.note?`<p style="margin:0">${esc(i.note)}</p>`:""}
+  ${shop.pickup?`<p style="margin:0;color:var(--mute);font-size:14px">交易：${esc(shop.pickup)}</p>`:""}
+  ${sold?"":`<div class="msg">${esc(msg)}</div>`}
+  <div class="row" style="justify-content:flex-end"><button class="btn" id="vClose">关闭</button>${sold?"":`<button class="btn main" id="vCopy">复制询问消息</button>`}</div>`;
+  $("view").showModal();
+  $("vClose").onclick=()=>$("view").close();
+  const c=$("vCopy");if(c)c.onclick=async()=>{try{await navigator.clipboard.writeText(msg);toast("已复制，去私信粘贴就好")}catch(e){toast("复制不了，长按上面的文字复制")}};
+}
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-c],[data-code],#onlyOn");if(!t)return;
+  if(t.id==="onlyOn"){onlyOn=!onlyOn;render()}
+  else if(t.dataset.c){cat=t.dataset.c;render()}
+  else openView(t.dataset.code);
+});
+$("view").addEventListener("click",e=>{if(e.target===$("view"))$("view").close()});
+
+fetch("items.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(d=>{items=d.items||[];shop=d.shop||{};render()})
+  .catch(()=>{$("grid").innerHTML=`<div class="empty">加载失败，刷新一下试试。</div>`});
+}
+</script>
+</body>
+</html>
