@@ -74,7 +74,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
   <section id="app" hidden>
     <div class="row" style="justify-content:space-between">
       <a href="./" style="color:var(--mute);font-size:14px">查看买家页 →</a>
-      <div class="row"><button class="btn" id="reload">刷新</button><button class="btn main" id="addBtn">＋ 新增物品</button></div>
+      <div class="row"><button class="btn" id="shopBtn">店铺信息</button><button class="btn" id="reload">刷新</button><button class="btn main" id="addBtn">＋ 新增物品</button></div>
     </div>
     <div class="list" id="list"></div>
     <p class="hint" style="margin-top:22px">改状态会自动记日期：改成「在售」记上架日期，改成「已售出」记售出日期。每次保存后，买家页约 1 分钟更新。小红书图需要更新时，跟 Claude 说「出图」。</p>
@@ -98,6 +98,14 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
     <button type="button" class="btn" id="delBtn">删除</button>
     <div class="row"><button type="button" class="btn" id="cancel">取消</button><button class="btn main" id="saveBtn">保存</button></div>
   </div>
+</form></dialog>
+<dialog id="shopDlg"><form class="card" id="shopForm" style="border:0">
+  <h2 style="font-size:22px">店铺信息</h2>
+  <label>小红书主页链接<input id="sXhs" inputmode="url" placeholder="https://xhslink.com/… 或 https://www.xiaohongshu.com/user/profile/…"></label>
+  <label>小红书号 / 联系方式（显示在买家页底部）<input id="sContact"></label>
+  <label>交易方式 / 地点<input id="sPickup"></label>
+  <div class="err" id="shopErr"></div>
+  <div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="shopCancel">取消</button><button class="btn main">保存</button></div>
 </form></dialog>
 <div class="toast" id="toast"></div>
 
@@ -240,6 +248,13 @@ $("form").onsubmit=async e=>{
   $("saveBtn").disabled=false;if(ok)$("edit").close();
 };
 $("addBtn").onclick=()=>openEdit(null);
+$("shopBtn").onclick=()=>{const s=data.shop||{};$("sXhs").value=s.xhsUrl||"";$("sContact").value=s.contact||"";$("sPickup").value=s.pickup||"";$("shopErr").textContent="";$("shopDlg").showModal()};
+$("shopCancel").onclick=()=>$("shopDlg").close();
+$("shopForm").onsubmit=async e=>{e.preventDefault();
+  let u=$("sXhs").value.trim();const m=u.match(/https?:\/\/[^\s，。]+/);if(m)u=m[0].replace(/^http:/,"https:");
+  if(u&&!/^https:\/\/(www\.)?(xiaohongshu\.com|xhslink\.com)\//.test(u)){$("shopErr").textContent="请粘贴小红书的分享链接（xhslink.com 或 xiaohongshu.com 开头）";return}
+  const c=$("sContact").value.trim(),p=$("sPickup").value.trim();
+  if(await commit("Update shop info",d=>{d.shop.xhsUrl=u;d.shop.contact=c;d.shop.pickup=p}))$("shopDlg").close()};
 $("reload").onclick=()=>load().then(()=>toast("已刷新")).catch(()=>toast("刷新失败"));
 function logout(){token="";try{localStorage.removeItem("ms_token")}catch(e){}$("app").hidden=true;$("login").hidden=false}
 $("logout").onclick=logout;
