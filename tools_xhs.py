@@ -1,4 +1,5 @@
 # Generates Xiaohongshu cover + list images from items.json
+# usage: python3 tools_xhs.py OUTPUT_DIR   (writes cover.png / list.png)
 import json,sys,html,os,subprocess
 repo=os.path.dirname(os.path.abspath(__file__)); out=sys.argv[1]
 d=json.load(open(os.path.join(repo,'items.json'))); shop=d['shop']
@@ -12,7 +13,7 @@ base=f"""<style>*{{box-sizing:border-box;margin:0}}body{{width:1080px;font-famil
 .tag{{position:absolute;top:22px;left:22px;background:#d85f35;color:#fff;font-weight:700;font-size:44px;padding:6px 22px 6px 44px;border-radius:6px 18px 18px 6px}}
 .tag:before{{content:"";position:absolute;left:16px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#fff}}</style>"""
 # cover
-picks=[c for c in ['A10','A02','A07','A08'] if any(i['code']==c and i['status']!='已售出' for i in items)]
+picks=[c for c in shop.get('coverPicks',[]) if any(i['code']==c and i['status']!='已售出' for i in items)]
 picks=(picks+[i['code'] for i in on if i['code'] not in picks and i['photos']])[:4]
 cells=''.join(f'<div style="position:relative;border-radius:24px;overflow:hidden;background:#eef4ee"><img src="{src(it["photos"][0])}" style="width:100%;height:100%;object-fit:cover;display:block"><span class="tag">${it["price"]}</span></div>' for c in picks for it in [next(x for x in items if x['code']==c)])
 lo=min(i['price'] for i in on)
@@ -40,4 +41,17 @@ lst=f"""<html><head><meta charset=utf-8>{base}</head><body>
 <div style="padding:34px 60px 60px;font-size:32px;color:#5d6b62;line-height:1.6">想要哪件，私信报编号就好<br>{e(shop['pickup'])}</div></body></html>"""
 for name,h in [('cover',cover),('list',lst)]:
     open(os.path.join(out,name+'.html'),'w').write(h)
-print('ok',picks,len(items))
+# render PNGs
+import asyncio
+from playwright.async_api import async_playwright
+async def render():
+    async with async_playwright() as p:
+        exe='/usr/bin/google-chrome' if os.path.exists('/usr/bin/google-chrome') else None
+        b=await p.chromium.launch(executable_path=exe) if exe else await p.chromium.launch()
+        pg=await b.new_page(viewport={'width':1080,'height':1440})
+        for name,full in [('cover',False),('list',True)]:
+            await pg.goto('file://'+os.path.join(os.path.abspath(out),name+'.html')); await pg.wait_for_timeout(800)
+            await pg.screenshot(path=os.path.join(out,name+'.png'),full_page=full)
+        await b.close()
+asyncio.run(render())
+print('ok',picks,len(items),os.path.join(out,'cover.png'),os.path.join(out,'list.png'))
