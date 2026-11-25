@@ -16,7 +16,7 @@ base=f"""<style>*{{box-sizing:border-box;margin:0}}body{{width:1080px;font-famil
 picks=[c for c in shop.get('coverPicks',[]) if any(i['code']==c and i['status']!='已售出' for i in items)]
 picks=(picks+[i['code'] for i in on if i['code'] not in picks and i['photos']])[:4]
 cells=''.join(f'<div style="position:relative;border-radius:24px;overflow:hidden;background:#eef4ee"><img src="{src(it["photos"][0])}" style="width:100%;height:100%;object-fit:cover;display:block"><span class="tag">${it["price"]}</span></div>' for c in picks for it in [next(x for x in items if x['code']==c)])
-lo=min(i['price'] for i in on)
+lo=min([i['price'] for i in on if i['price']] or [0])
 cover=f"""<html><head><meta charset=utf-8>{base}</head><body style="height:1440px;background:#1d4a33;color:#f1f7f2;padding:70px 60px">
 <div style="font-size:34px;opacity:.85;letter-spacing:2px">Jersey City · Journal Square 自提</div>
 <div style="font-family:{SERIF};font-weight:700;font-size:112px;line-height:1.08;margin-top:22px">毕业回国<br>JSQ 出闲置二手</div>
@@ -33,7 +33,7 @@ for i in items:
 <div style="flex:1;display:grid;gap:10px"><div style="display:flex;gap:14px;align-items:center"><span style="background:#1d4a33;color:#fff;font-size:28px;padding:2px 14px;border-radius:8px">{e(i['code'])}</span>{badge}</div>
 <div style="font-size:42px;font-weight:700;line-height:1.25;{"text-decoration:line-through" if sold else ""}">{e(i['name'])}</div>
 <div style="font-size:30px;color:#5d6b62;line-height:1.4">{e(i['condition'] or '')}{' · ' if i['condition'] and i['note'] else ''}{e(i['note'][:34]+('…' if len(i['note'])>34 else ''))}</div></div>
-<div style="font-size:60px;font-weight:700;color:#d85f35;white-space:nowrap;{"text-decoration:line-through" if sold else ""}">${i['price']}</div></div>"""
+<div style="font-size:60px;font-weight:700;color:#d85f35;white-space:nowrap;{"text-decoration:line-through" if sold else ""}">{'免费' if i['price']==0 else '$'+str(i['price'])}</div></div>"""
 lst=f"""<html><head><meta charset=utf-8>{base}</head><body>
 <div style="background:#1d4a33;color:#f1f7f2;padding:60px 60px 50px"><div style="font-family:{SERIF};font-weight:700;font-size:80px">闲置清单</div>
 <div style="font-size:34px;margin-top:14px;opacity:.9">在售 {len(on)} 件 · 已出 {len(items)-len(on)} 件 · Journal Square PATH 附近自提</div></div>
