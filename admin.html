@@ -74,7 +74,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
   <section id="app" hidden>
     <div class="row" style="justify-content:space-between">
       <a href="./" style="color:var(--mute);font-size:14px">查看买家页 →</a>
-      <div class="row"><button class="btn" id="shopBtn">店铺信息</button><button class="btn" id="reload">刷新</button><button class="btn main" id="addBtn">＋ 新增物品</button></div>
+      <div class="row"><button class="btn" id="shopBtn">卖家信息</button><button class="btn" id="reload">刷新</button><button class="btn main" id="addBtn">＋ 新增物品</button></div>
     </div>
     <div class="list" id="list"></div>
     <p class="hint" style="margin-top:22px">改状态会自动记日期：改成「在售」记上架日期，改成「已售出」记售出日期。每次保存后，买家页约 1 分钟更新。小红书图需要更新时，跟 Claude 说「出图」。</p>
@@ -100,7 +100,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
   </div>
 </form></dialog>
 <dialog id="shopDlg"><form class="card" id="shopForm" style="border:0">
-  <h2 style="font-size:22px">店铺信息</h2>
+  <h2 style="font-size:22px">卖家信息</h2>
   <label>小红书主页链接<input id="sXhs" inputmode="url" placeholder="https://xhslink.com/… 或 https://www.xiaohongshu.com/user/profile/…"></label>
   <label>小红书号 / 联系方式（显示在买家页底部）<input id="sContact"></label>
   <label>交易方式 / 地点<input id="sPickup"></label>
