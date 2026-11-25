@@ -181,10 +181,10 @@ function applyStatus(i,s){
 function nextCode(){const n=data.items.map(i=>parseInt(String(i.code).replace(/\D/g,""))||0);return "A"+String(Math.max(0,...n)+1).padStart(2,"0")}
 function openEdit(code){
   editing=code?data.items.find(i=>i.code===code):null;
-  const i=editing||{code:nextCode(),status:"在售",category:CATS[0],photos:[]};
+  const i=editing||{code:nextCode(),status:"在售",category:"",photos:[]};
   $("eTitle").textContent=editing?"编辑物品":"新增物品";
   $("fStatus").innerHTML=STATUSES.map(s=>`<option${s===i.status?" selected":""}>${s}</option>`).join("");
-  $("fCat").innerHTML=CATS.map(c=>`<option${c===i.category?" selected":""}>${c}</option>`).join("");
+  $("fCat").innerHTML=(i.category?"":`<option value="" selected disabled>请选择分类</option>`)+CATS.map(c=>`<option${c===i.category?" selected":""}>${c}</option>`).join("");
   $("fCode").value=i.code;$("fName").value=i.name||"";$("fPrice").value=i.price??"";$("fCond").value=i.condition||"";
   $("fNote").value=i.note||"";$("fListed").value=i.listedAt||(editing?"":today());$("fSoldAt").value=i.soldAt||"";
   photos=[...(i.photos||[])];drawThumbs();$("formErr").textContent="";$("upMsg").textContent="";
@@ -233,6 +233,7 @@ $("form").onsubmit=async e=>{
   const code=$("fCode").value.trim();
   if(!/^[A-Za-z0-9-]+$/.test(code)){$("formErr").textContent="编号只能用字母、数字和横线";return}
   if(!$("fName").value.trim()){$("formErr").textContent="填一下物品名称";return}
+  if(!$("fCat").value){$("formErr").textContent="选一下分类";return}
   if((!editing||editing.code!==code)&&data.items.some(i=>i.code===code)){$("formErr").textContent="这个编号已经有了";return}
   const v=$("fPrice").value;
   const item={code,name:$("fName").value.trim(),status:$("fStatus").value,price:v===""?null:Number(v),category:$("fCat").value,
