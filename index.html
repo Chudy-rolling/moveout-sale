@@ -61,6 +61,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
 .toast.on{opacity:1}
 @media(max-width:600px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tag{font-size:15px}.info{padding:10px 10px 12px}.info strong{font-size:15px}}
 </style>
+<script data-goatcounter="https://jsq-moveout.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 <header class="band top"><div class="wrap">
@@ -87,6 +88,7 @@ const CATS=["植物/园艺","家具","电器/数码","厨房","服饰鞋包","�
 const RANK={"在售":0,"已预订":1,"已售出":2};
 let items=[],shop={},cat="全部",onlyOn=false;
 
+const track=(path,title)=>{try{window.goatcounter&&window.goatcounter.count&&window.goatcounter.count({path,title,event:true})}catch(e){}};
 function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2200)}
 function list(){return items.filter(i=>i.status in RANK).sort((a,b)=>RANK[a.status]-RANK[b.status]||a.code.localeCompare(b.code))}
 
@@ -113,6 +115,7 @@ function render(){
 
 function openView(code){
   const i=items.find(x=>x.code===code);if(!i)return;
+  track("查看-"+i.code,i.name);
   const sold=i.status==="已售出";
   const msg=`你好！想要 ${i.code} ${i.name}（${money(i.price)}），请问什么时候方便交易？`;
   $("viewBody").innerHTML=`${(i.photos||[]).length?`<div class="shots">${i.photos.map(p=>`<img src="${esc(p)}" alt="">`).join("")}</div>`:""}
@@ -124,7 +127,7 @@ function openView(code){
   <div class="row" style="justify-content:flex-end"><button class="btn" id="vClose">关闭</button>${sold?"":`<button class="btn main" id="vCopy">复制询问消息</button>`}</div>`;
   $("view").showModal();
   $("vClose").onclick=()=>$("view").close();
-  const c=$("vCopy");if(c)c.onclick=async()=>{try{await navigator.clipboard.writeText(msg);toast("已复制，去私信粘贴就好")}catch(e){toast("复制不了，长按上面的文字复制")}};
+  const c=$("vCopy");if(c)c.onclick=async()=>{track("询问-"+i.code,i.name);try{await navigator.clipboard.writeText(msg);toast("已复制，去私信粘贴就好")}catch(e){toast("复制不了，长按上面的文字复制")}};
 }
 
 document.addEventListener("click",e=>{
