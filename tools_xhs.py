@@ -18,7 +18,7 @@ cells=''.join(f'<div style="position:relative;border-radius:24px;overflow:hidden
 lo=min(i['price'] for i in on)
 cover=f"""<html><head><meta charset=utf-8>{base}</head><body style="height:1440px;background:#1d4a33;color:#f1f7f2;padding:70px 60px">
 <div style="font-size:34px;opacity:.85;letter-spacing:2px">Jersey City · Journal Square 自提</div>
-<div style="font-family:{SERIF};font-weight:700;font-size:112px;line-height:1.08;margin-top:22px">毕业回国<br>清仓甩卖</div>
+<div style="font-family:{SERIF};font-weight:700;font-size:112px;line-height:1.08;margin-top:22px">毕业回国<br>JSQ 出闲置二手</div>
 <div style="display:flex;gap:16px;margin-top:30px;align-items:center"><span style="background:#d85f35;color:#fff;font-size:44px;font-weight:700;padding:8px 26px;border-radius:999px">${lo} 起</span><span style="font-size:40px">植物 · 花架 · 园艺好物</span></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:400px 400px;gap:20px;margin-top:48px">{cells}</div>
 </body></html>"""
