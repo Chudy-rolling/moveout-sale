@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>卖家端 · JSQ 闲置二手</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--ink:#18241d;--mute:#5d6b62;--leaf:#1d4a33;--leafInk:#f1f7f2;--sage:#eef4ee;--line:#dbe5dc;--terra:#d85f35;--card:#fff;--warn:#a32d2d}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1a14;--ink:#e6efe8;--mute:#9fb1a5;--leaf:#173a28;--sage:#18261e;--line:#2a3a30;--terra:#e8794f;--card:#142019;--warn:#f09595}}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Noto Sans SC",system-ui,sans-serif}
+h1,h2{font-family:"Noto Serif SC",serif;line-height:1.15;margin:0}
+.top{background:var(--leaf);color:var(--leafInk);padding:24px max(5vw,16px)}
+.top h1{font-size:28px}
+.stats{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:14px}
+.stats b{display:block;font-size:24px;line-height:1.1}.stats span{font-size:13px;opacity:.8}
+main{padding:20px max(5vw,16px) 80px;max-width:820px;margin:0 auto}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:10px;padding:10px 16px;min-height:44px;font:inherit;font-weight:500;cursor:pointer;background:var(--sage);color:var(--ink)}
+.btn.main{background:var(--terra);color:#fff}.btn.small{min-height:36px;padding:6px 12px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:wait}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+label{display:grid;gap:4px;font-size:14px;color:var(--mute)}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-height:44px;width:100%}
+textarea{min-height:80px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px}
+.list{display:grid;gap:10px;margin-top:16px}
+.arow{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.arow img,.arow .th{width:56px;height:56px;border-radius:8px;object-fit:cover;background:var(--sage)}
+.arow .meta{display:grid;gap:2px}.arow small{color:var(--mute);font-size:13px}
+.arow .ctl{display:flex;gap:6px;align-items:center}
+.arow select{min-height:38px;padding:4px 8px;font-size:14px;width:auto}
+.grp{font-size:13px;color:var(--mute);margin:18px 0 -6px}
+dialog{border:0;border-radius:16px;padding:0;max-width:min(560px,94vw);width:100%;background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,14,.55)}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap}.thumbs div{position:relative}
+.thumbs img{width:72px;height:72px;object-fit:cover;border-radius:8px}
+.thumbs button{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.err{color:var(--warn);font-size:14px}
+.hint{font-size:13px;color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+[hidden]{display:none!important}
+@media(max-width:600px){.two{grid-template-columns:1fr}.arow{grid-template-columns:48px minmax(0,1fr)}.arow img,.arow .th{width:48px;height:48px}.arow .ctl{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>卖家端</h1>
+  <div class="stats">
+    <div><b id="sOn">–</b><span>件在售/预订</span></div>
+    <div><b id="sSold">–</b><span>件已出</span></div>
+    <div><b id="sVal">–</b><span>在售标价合计</span></div>
+  </div>
+</header>
+<main>
+  <section id="login" class="card" hidden>
+    <h2 style="font-size:22px">先连接 GitHub</h2>
+    <p class="hint" style="margin:0">粘贴只对 moveout-sale 仓库有写入权限的 GitHub 令牌。令牌只存在这台设备的浏览器里，不会上传到任何地方。</p>
+    <label>GitHub 令牌<input id="tok" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+    <div class="err" id="loginErr"></div>
+    <button class="btn main" id="loginBtn">连接</button>
+  </section>
+
+  <section id="app" hidden>
+    <div class="row" style="justify-content:space-between">
+      <a href="./" style="color:var(--mute);font-size:14px">查看买家页 →</a>
+      <div class="row"><button class="btn" id="reload">刷新</button><button class="btn main" id="addBtn">＋ 新增物品</button></div>
+    </div>
+    <div class="list" id="list"></div>
+    <p class="hint" style="margin-top:22px">改状态会自动记日期：改成「在售」记上架日期，改成「已售出」记售出日期。每次保存后，买家页约 1 分钟更新。小红书图需要更新时，跟 Claude 说「出图」。</p>
+    <p class="hint"><button class="btn small" id="logout">退出登录</button></p>
+  </section>
+</main>
+
+<dialog id="edit"><form class="card" id="form" style="border:0">
+  <h2 style="font-size:22px" id="eTitle">编辑物品</h2>
+  <div class="two"><label>编号<input id="fCode" required></label><label>状态<select id="fStatus"></select></label></div>
+  <label>物品名称<input id="fName" required></label>
+  <div class="two"><label>定价 ($)<input id="fPrice" type="number" min="0" step="1" inputmode="decimal"></label><label>分类<select id="fCat"></select></label></div>
+  <label>新旧程度<input id="fCond"></label>
+  <label>描述（买家可见）<textarea id="fNote"></textarea></label>
+  <div class="two"><label>上架日期<input id="fListed" type="date"></label><label>售出日期<input id="fSoldAt" type="date"></label></div>
+  <div><div class="hint" style="margin-bottom:6px">照片（第一张是封面）</div><div class="thumbs" id="thumbs"></div>
+    <label class="btn small" style="display:inline-flex;margin-top:8px;cursor:pointer;width:auto">上传照片<input type="file" id="file" accept="image/*" multiple hidden></label>
+    <span class="hint" id="upMsg"></span></div>
+  <div class="err" id="formErr"></div>
+  <div class="row" style="justify-content:space-between">
+    <button type="button" class="btn" id="delBtn">删除</button>
+    <div class="row"><button type="button" class="btn" id="cancel">取消</button><button class="btn main" id="saveBtn">保存</button></div>
+  </div>
+</form></dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+{
+const OWNER="Chudy-rolling",REPO="moveout-sale",API=`https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
+const STATUSES=["待上架","在售","已预订","已售出","送人/自留"];
+const CATS=["植物/园艺","家具","电器/数码","厨房","服饰鞋包","书/文具","其他"];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const md=s=>s?(+s.slice(5,7))+"/"+(+s.slice(8,10)):"";
+let token="",data=null,sha="",editing=null,photos=[],busy=false;
+const previews={};
+const imgSrc=p=>previews[p]||(/^img\/[\w.-]+$/.test(p)?p+"?v="+(data?.shop?.updated||""):"");
+try{token=localStorage.getItem("ms_token")||""}catch(e){}
+
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2600)}
+const b64enc=str=>{const b=new TextEncoder().encode(str);let s="";for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode(...b.subarray(i,i+0x8000));return btoa(s)};
+const b64dec=b=>new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g,"")),c=>c.charCodeAt(0)));
+async function gh(path,opt={}){
+  const r=await fetch(API+path,{...opt,headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json",...(opt.body?{"Content-Type":"application/json"}:{})}});
+  if(!r.ok){const e=new Error(r.status);e.status=r.status;throw e}
+  return r.json();
+}
+async function load(){
+  const j=await gh("items.json?ref=main&t="+Date.now());
+  sha=j.sha;data=JSON.parse(b64dec(j.content));render();
+}
+async function commit(msg,mutate){
+  if(busy){toast("上一次保存还没完成，稍等一下");return false}
+  busy=true;
+  for(let attempt=0;attempt<2;attempt++){
+    try{
+      mutate(data);
+      data.shop.updated=new Date().toISOString();
+      const r=await gh("items.json",{method:"PUT",body:JSON.stringify({message:msg,content:b64enc(JSON.stringify(data,null,1)+"\n"),sha,branch:"main"})});
+      sha=r.content.sha;busy=false;render();toast("已保存，买家页约 1 分钟后更新");return true;
+    }catch(e){
+      if(e.status===409&&attempt===0){await load();continue}
+      busy=false;
+      if(e.status===401||e.status===403){toast("令牌无效或没有写入权限，请重新登录");logout()}
+      else toast("保存失败，检查网络后再试一次");
+      await load().catch(()=>{});return false;
+    }
+  }
+  busy=false;return false;
+}
+
+function render(){
+  if(!data)return;
+  const it=data.items||[];
+  const on=it.filter(i=>i.status==="在售"||i.status==="已预订");
+  $("sOn").textContent=on.length;$("sSold").textContent=it.filter(i=>i.status==="已售出").length;
+  $("sVal").textContent="$"+on.reduce((s,i)=>s+(+i.price||0),0);
+  const groups=[["在售","已预订"],["待上架"],["已售出","送人/自留"]];
+  const names=["在售 / 已预订","待上架","已售出 / 送人"];
+  $("list").innerHTML=groups.map((g,k)=>{const rows=it.filter(i=>g.includes(i.status)).sort((a,b)=>a.code.localeCompare(b.code));
+    if(!rows.length)return"";
+    return `<div class="grp">${names[k]}（${rows.length}）</div>`+rows.map(i=>{const p=imgSrc((i.photos||[])[0]||"");
+    return `<div class="arow">${p?`<img src="${esc(p)}" alt="">`:`<div class="th"></div>`}
+    <div class="meta"><strong>${esc(i.code)} ${esc(i.name)}</strong>
+    <small>${i.price!=null?"$"+esc(i.price):"未定价"}${i.listedAt?" · 上架 "+esc(md(i.listedAt)):""}${i.soldAt?" · 售出 "+esc(md(i.soldAt)):""}</small></div>
+    <div class="ctl"><select data-s="${esc(i.code)}" aria-label="状态">${STATUSES.map(s=>`<option${s===i.status?" selected":""}>${s}</option>`).join("")}</select>
+    <button class="btn small" data-e="${esc(i.code)}">编辑</button></div></div>`}).join("")}).join("");
+}
+function applyStatus(i,s){
+  i.status=s;
+  if(s==="在售"&&!i.listedAt)i.listedAt=today();
+  if(s==="已售出"){if(!i.soldAt)i.soldAt=today()}else i.soldAt=null;
+}
+
+function nextCode(){const n=data.items.map(i=>parseInt(String(i.code).replace(/\D/g,""))||0);return "A"+String(Math.max(0,...n)+1).padStart(2,"0")}
+function openEdit(code){
+  editing=code?data.items.find(i=>i.code===code):null;
+  const i=editing||{code:nextCode(),status:"在售",category:CATS[0],photos:[]};
+  $("eTitle").textContent=editing?"编辑物品":"新增物品";
+  $("fStatus").innerHTML=STATUSES.map(s=>`<option${s===i.status?" selected":""}>${s}</option>`).join("");
+  $("fCat").innerHTML=CATS.map(c=>`<option${c===i.category?" selected":""}>${c}</option>`).join("");
+  $("fCode").value=i.code;$("fName").value=i.name||"";$("fPrice").value=i.price??"";$("fCond").value=i.condition||"";
+  $("fNote").value=i.note||"";$("fListed").value=i.listedAt||(editing?"":today());$("fSoldAt").value=i.soldAt||"";
+  photos=[...(i.photos||[])];drawThumbs();$("formErr").textContent="";$("upMsg").textContent="";
+  $("delBtn").hidden=!editing;$("delBtn").textContent="删除";$("delBtn").dataset.sure="";
+  $("edit").showModal();
+}
+function drawThumbs(){$("thumbs").innerHTML=photos.map((p,k)=>`<div><img src="${esc(imgSrc(p))}" alt=""><button type="button" data-k="${k}" aria-label="移除">×</button></div>`).join("")}
+function shrink(file){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{const s=Math.min(1,1000/Math.max(img.width,img.height));
+  const c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+  c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(img.src);c.toBlob(b=>b?res(b):rej(),"image/jpeg",.8)};
+  img.onerror=rej;img.src=URL.createObjectURL(file)})}
+const blobB64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(String(f.result).split(",")[1]);f.readAsDataURL(b)});
+
+$("file").onchange=async e=>{
+  const files=[...e.target.files];e.target.value="";
+  const code=($("fCode").value.trim()||"X").replace(/[^\w-]/g,"");
+  for(const [k,f] of files.entries()){
+    $("upMsg").textContent=`上传中 ${k+1}/${files.length}…`;
+    try{const b=await shrink(f);const path=`img/${code}-${Date.now().toString(36)}.jpg`;
+      await gh(path,{method:"PUT",body:JSON.stringify({message:`Add photo for ${code}`,content:await blobB64(b),branch:"main"})});
+      previews[path]=URL.createObjectURL(b);photos.push(path);drawThumbs();
+    }catch(err){toast("有一张照片没传上，再试一次")}
+  }
+  $("upMsg").textContent="";
+};
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-e],[data-k]");if(!t)return;
+  if(t.dataset.e)openEdit(t.dataset.e);else{photos.splice(+t.dataset.k,1);drawThumbs()}
+});
+document.addEventListener("change",async e=>{
+  const code=e.target.dataset&&e.target.dataset.s;if(!code)return;
+  const s=e.target.value;e.target.disabled=true;
+  await commit(`${code} → ${s}`,d=>applyStatus(d.items.find(i=>i.code===code),s));
+});
+$("fStatus").onchange=()=>{const s=$("fStatus").value;
+  if(s==="在售"&&!$("fListed").value)$("fListed").value=today();
+  if(s==="已售出"&&!$("fSoldAt").value)$("fSoldAt").value=today()};
+$("cancel").onclick=()=>$("edit").close();
+$("delBtn").onclick=async()=>{
+  if($("delBtn").dataset.sure!=="1"){$("delBtn").dataset.sure="1";$("delBtn").textContent="再点一次确认删除";return}
+  const code=editing.code;
+  if(await commit(`Delete ${code}`,d=>{d.items=d.items.filter(i=>i.code!==code)}))$("edit").close();
+};
+$("form").onsubmit=async e=>{
+  e.preventDefault();
+  const code=$("fCode").value.trim();
+  if(!/^[A-Za-z0-9-]+$/.test(code)){$("formErr").textContent="编号只能用字母、数字和横线";return}
+  if(!$("fName").value.trim()){$("formErr").textContent="填一下物品名称";return}
+  if((!editing||editing.code!==code)&&data.items.some(i=>i.code===code)){$("formErr").textContent="这个编号已经有了";return}
+  const v=$("fPrice").value;
+  const item={code,name:$("fName").value.trim(),status:$("fStatus").value,price:v===""?null:Number(v),category:$("fCat").value,
+    condition:$("fCond").value.trim(),note:$("fNote").value.trim(),listedAt:$("fListed").value||null,soldAt:$("fSoldAt").value||null,photos:[...photos]};
+  if(item.status==="已售出"&&!item.soldAt)item.soldAt=today();
+  if(item.status!=="已售出")item.soldAt=null;
+  $("saveBtn").disabled=true;
+  const old=editing&&editing.code;
+  const ok=await commit(old?`Update ${code}`:`Add ${code}`,d=>{
+    const ix=old?d.items.findIndex(i=>i.code===old):-1;
+    if(ix>=0)d.items[ix]=item;else d.items.push(item);
+  });
+  $("saveBtn").disabled=false;if(ok)$("edit").close();
+};
+$("addBtn").onclick=()=>openEdit(null);
+$("reload").onclick=()=>load().then(()=>toast("已刷新")).catch(()=>toast("刷新失败"));
+function logout(){token="";try{localStorage.removeItem("ms_token")}catch(e){}$("app").hidden=true;$("login").hidden=false}
+$("logout").onclick=logout;
+$("loginBtn").onclick=async()=>{
+  token=$("tok").value.trim();$("loginErr").textContent="";
+  if(!token){$("loginErr").textContent="先粘贴令牌";return}
+  try{await load();try{localStorage.setItem("ms_token",token)}catch(e){}$("login").hidden=true;$("app").hidden=false}
+  catch(e){$("loginErr").textContent=e.status===401?"令牌无效，检查一下有没有复制完整":e.status===404?"这个令牌看不到 moveout-sale 仓库，检查仓库权限":"连接失败，稍后再试"}
+};
+if(token){load().then(()=>{$("app").hidden=false}).catch(()=>{$("login").hidden=false})}else $("login").hidden=false;
+}
+</script>
+</body>
+</html>
