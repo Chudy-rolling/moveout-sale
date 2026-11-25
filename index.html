@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>毕业回国清仓</title>
-<meta name="description" content="毕业回国清仓：植物、家具和生活好物低价转出，Jersey City Journal Square 自提。">
-<meta property="og:title" content="毕业回国清仓">
+<title>毕业回国 · JSQ 闲置二手</title>
+<meta name="description" content="毕业回国 · JSQ 闲置二手：植物、家具和生活好物低价转出，Jersey City Journal Square 自提。">
+<meta property="og:title" content="毕业回国 · JSQ 闲置二手">
 <meta property="og:description" content="植物、家具和生活好物低价转出，先到先得">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
@@ -64,7 +64,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
 </head>
 <body>
 <header class="band top"><div class="wrap">
-  <h1 id="title">毕业回国清仓</h1>
+  <h1 id="title">毕业回国 · JSQ 闲置二手</h1>
   <p id="sub">毕业回国，植物、家具和生活好物低价转出，先到先得</p>
   <div class="stats">
     <div class="stat"><b id="sOn">–</b><span>件在售</span></div>
@@ -91,7 +91,7 @@ function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");cl
 function list(){return items.filter(i=>i.status in RANK).sort((a,b)=>RANK[a.status]-RANK[b.status]||a.code.localeCompare(b.code))}
 
 function render(){
-  $("title").textContent=shop.title||"毕业回国清仓";
+  $("title").textContent=shop.title||"毕业回国 · JSQ 闲置二手";
   $("sub").textContent=[shop.sub,shop.pickup].filter(Boolean).join(" · ");
   const all=list();
   $("sOn").textContent=all.filter(i=>i.status!=="已售出").length;

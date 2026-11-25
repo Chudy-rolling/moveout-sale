@@ -34,7 +34,7 @@ for i in items:
 <div style="font-size:30px;color:#5d6b62;line-height:1.4">{e(i['condition'] or '')}{' · ' if i['condition'] and i['note'] else ''}{e(i['note'][:34]+('…' if len(i['note'])>34 else ''))}</div></div>
 <div style="font-size:60px;font-weight:700;color:#d85f35;white-space:nowrap;{"text-decoration:line-through" if sold else ""}">${i['price']}</div></div>"""
 lst=f"""<html><head><meta charset=utf-8>{base}</head><body>
-<div style="background:#1d4a33;color:#f1f7f2;padding:60px 60px 50px"><div style="font-family:{SERIF};font-weight:700;font-size:80px">清仓清单</div>
+<div style="background:#1d4a33;color:#f1f7f2;padding:60px 60px 50px"><div style="font-family:{SERIF};font-weight:700;font-size:80px">闲置清单</div>
 <div style="font-size:34px;margin-top:14px;opacity:.9">在售 {len(on)} 件 · 已出 {len(items)-len(on)} 件 · Journal Square PATH 附近自提</div></div>
 <div style="padding:10px 60px 30px">{rows}</div>
 <div style="padding:34px 60px 60px;font-size:32px;color:#5d6b62;line-height:1.6">想要哪件，私信报编号就好<br>{e(shop['pickup'])}</div></body></html>"""
