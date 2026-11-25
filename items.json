@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "",
-  "updated": "2026-11-25T15:15:00-05:00",
+  "updated": "2026-11-25T20:44:50.717Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -175,6 +175,18 @@
    "condition": "",
    "note": "",
    "listedAt": null,
+   "soldAt": null,
+   "photos": []
+  },
+  {
+   "code": "A13",
+   "name": "一袋土",
+   "status": "在售",
+   "price": 0,
+   "category": "植物/园艺",
+   "condition": "",
+   "note": "免费送，先到先得",
+   "listedAt": "2026-11-25",
    "soldAt": null,
    "photos": []
   }
