@@ -77,7 +77,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
     <div class="stat"><b id="sOn">–</b><span>件在售</span></div>
     <div class="stat"><b id="sSold">–</b><span>件已出</span></div>
   </div>
-  <a class="xhs" id="xhsTop" href="#" target="_blank" rel="noopener" hidden>去小红书找我</a>
+  <div class="row" style="margin-top:16px;gap:12px"><a class="xhs" id="xhsTop" href="#" target="_blank" rel="noopener" style="margin-top:0" hidden>去小红书找我</a><span id="xhsId" style="font-size:14px;opacity:.85"></span></div>
 </div></header>
 <main class="band"><div class="wrap">
   <div class="bar" id="cats"></div>
@@ -108,6 +108,7 @@ function list(){return items.filter(i=>i.status in RANK).sort((a,b)=>RANK[a.stat
 
 const xhsOk=u=>typeof u==="string"&&/^https:\/\/(www\.)?(xiaohongshu\.com|xhslink\.com)\//.test(u);
 function render(){
+  $("xhsId").textContent=shop.contact||"";
   const xt=$("xhsTop");if(xhsOk(shop.xhsUrl)){xt.href=shop.xhsUrl;xt.hidden=false}else xt.hidden=true;
   $("title").textContent=shop.title||"毕业回国 · JSQ 闲置二手";
   $("sub").textContent=[shop.sub,shop.pickup].filter(Boolean).join(" · ");
