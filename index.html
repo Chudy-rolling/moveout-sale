@@ -71,6 +71,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
 .toast.on{opacity:1}
 @media(max-width:600px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tag{font-size:15px}.info{padding:10px 10px 12px}.info strong{font-size:15px}}
 </style>
+<script>try{if(localStorage.getItem("ms_token")||localStorage.getItem("skipgc")==="t"){window.goatcounter={no_onload:true};window.__noTrack=true}}catch(e){}</script>
 <script data-goatcounter="https://jsq-moveout.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -127,7 +128,7 @@ function search(list,q){
 }
 
 
-const track=(path,title)=>{try{window.goatcounter&&window.goatcounter.count&&window.goatcounter.count({path,title,event:true})}catch(e){}};
+const track=(path,title)=>{if(window.__noTrack)return;try{window.goatcounter&&window.goatcounter.count&&window.goatcounter.count({path,title,event:true})}catch(e){}};
 function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2200)}
 const lkey=i=>i.listedTs||(i.listedAt?i.listedAt+"T00:00":"");
 function list(){return items.filter(i=>i.status in RANK).sort((a,b)=>RANK[a.status]-RANK[b.status]||lkey(b).localeCompare(lkey(a))||a.code.localeCompare(b.code))}
