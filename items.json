@@ -26,7 +26,8 @@
    "soldAt": "2026-11-25",
    "photos": [
     "img/A01.jpg"
-   ]
+   ],
+   "soldPrice": 15
   },
   {
    "code": "A02",
@@ -54,7 +55,8 @@
    "soldAt": "2026-11-25",
    "photos": [
     "img/A03.jpg"
-   ]
+   ],
+   "soldPrice": 4
   },
   {
    "code": "A04",
@@ -82,7 +84,8 @@
    "soldAt": "2026-11-25",
    "photos": [
     "img/A05.jpg"
-   ]
+   ],
+   "soldPrice": 4
   },
   {
    "code": "A06",
@@ -110,7 +113,8 @@
    "soldAt": "2026-11-25",
    "photos": [
     "img/A07.jpg"
-   ]
+   ],
+   "soldPrice": 10
   },
   {
    "code": "A08",
@@ -124,7 +128,8 @@
    "soldAt": "2026-11-25",
    "photos": [
     "img/A08.jpg"
-   ]
+   ],
+   "soldPrice": 2
   },
   {
    "code": "A09",

@@ -60,6 +60,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
     <div><b id="sOn">–</b><span>件在售/预订</span></div>
     <div><b id="sSold">–</b><span>件已出</span></div>
     <div><b id="sVal">–</b><span>在售标价合计</span></div>
+    <div><b id="sRev">–</b><span>已售收入</span></div>
   </div>
 </header>
 <main>
@@ -78,6 +79,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
     </div>
     <input id="q" type="search" placeholder="搜索编号、名称、描述…" autocomplete="off" aria-label="搜索物品" style="margin-top:14px">
     <div class="list" id="list"></div>
+    <details class="card" id="ledger" style="margin-top:22px"><summary style="cursor:pointer;font-weight:500">收入明细</summary><div id="ledgerBody"></div></details>
     <p class="hint" style="margin-top:22px">改状态会自动记日期：改成「在售」记上架日期，改成「已售出」记售出日期。每次保存后，买家页约 1 分钟更新。小红书图需要更新时，跟 Claude 说「出图」。</p>
     <p class="hint"><button class="btn small" id="logout">退出登录</button></p>
   </section>
@@ -90,6 +92,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
   <div class="two"><label>定价 ($)<input id="fPrice" type="number" min="0" step="1" inputmode="decimal"></label><label>分类<select id="fCat"></select></label></div>
   <label>新旧程度<input id="fCond"></label>
   <label>描述（买家可见）<textarea id="fNote"></textarea></label>
+  <label id="spRow">成交价 ($)（只有你在卖家端看得到）<input id="fSoldPrice" type="number" min="0" step="1" inputmode="decimal"></label>
   <div class="two"><label>上架日期<input id="fListed" type="date"></label><label>售出日期<input id="fSoldAt" type="date"></label></div>
   <div><div class="hint" style="margin-bottom:6px">照片（第一张是封面）</div><div class="thumbs" id="thumbs"></div>
     <label class="btn small" style="display:inline-flex;margin-top:8px;cursor:pointer;width:auto">上传照片<input type="file" id="file" accept="image/*" multiple hidden></label>
@@ -107,6 +110,11 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
   <label>交易方式 / 地点<input id="sPickup"></label>
   <div class="err" id="shopErr"></div>
   <div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="shopCancel">取消</button><button class="btn main">保存</button></div>
+</form></dialog>
+<dialog id="soldDlg"><form class="card" id="soldForm" style="border:0">
+  <h2 style="font-size:22px" id="soldTitle">卖了多少钱？</h2>
+  <label>成交价 ($)<input id="soldIn" type="number" min="0" step="1" inputmode="decimal" required></label>
+  <div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="soldCancel">取消</button><button class="btn main">标记已售出</button></div>
 </form></dialog>
 <div class="toast" id="toast"></div>
 
@@ -182,6 +190,15 @@ function render(){
   const on=it.filter(i=>i.status==="在售"||i.status==="已预订");
   $("sOn").textContent=on.length;$("sSold").textContent=it.filter(i=>i.status==="已售出").length;
   $("sVal").textContent="$"+on.reduce((s,i)=>s+(+i.price||0),0);
+  const sold=it.filter(i=>i.status==="已售出");
+  const got=i=>i.soldPrice??i.price??0;
+  const rev=sold.reduce((s,i)=>s+(+got(i)||0),0),list=sold.reduce((s,i)=>s+(+i.price||0),0);
+  $("sRev").textContent="$"+rev;
+  const byCat={};sold.forEach(i=>{const c=byCat[i.category]||(byCat[i.category]={n:0,r:0});c.n++;c.r+=+got(i)||0});
+  $("ledgerBody").innerHTML=sold.length?`<p class="hint" style="margin:10px 0">共卖出 ${sold.length} 件，收入 $${rev}${list?`，相当于标价的 ${Math.round(rev/list*100)}%`:""}</p>`+
+    Object.entries(byCat).map(([c,v])=>`<div class="row" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)"><span>${esc(c)}（${v.n} 件）</span><b>$${v.r}</b></div>`).join("")+
+    `<div style="margin-top:12px;display:grid;gap:4px">${[...sold].sort((a,b)=>String(b.soldAt).localeCompare(String(a.soldAt))).map(i=>`<div class="row hint" style="justify-content:space-between"><span>${esc(md(i.soldAt))} ${esc(i.code)} ${esc(i.name)}</span><span>$${esc(got(i))}${i.price!=null&&+got(i)!==+i.price?`（标价 $${esc(i.price)}）`:""}</span></div>`).join("")}</div>`
+    :`<p class="hint">还没有卖出的东西。</p>`;
   const groups=[["在售","已预订"],["待上架"],["已售出","送人/自留"]];
   const names=["在售 / 已预订","待上架","已售出 / 送人"];
   $("list").innerHTML=groups.map((g,k)=>{const rows=search(it.filter(i=>g.includes(i.status)),query).sort((a,b)=>a.code.localeCompare(b.code));
@@ -189,14 +206,14 @@ function render(){
     return `<div class="grp">${names[k]}（${rows.length}）</div>`+rows.map(i=>{const p=imgSrc((i.photos||[])[0]||"");
     return `<div class="arow">${p?`<img src="${esc(p)}" alt="">`:`<div class="th"></div>`}
     <div class="meta"><strong>${esc(i.code)} ${esc(i.name)}</strong>
-    <small>${i.price!=null?"$"+esc(i.price):"未定价"}${i.listedAt?" · 上架 "+esc(md(i.listedAt)):""}${i.soldAt?" · 售出 "+esc(md(i.soldAt)):""}</small></div>
+    <small>${i.price!=null?"$"+esc(i.price):"未定价"}${i.listedAt?" · 上架 "+esc(md(i.listedAt)):""}${i.soldAt?" · 售出 "+esc(md(i.soldAt)):""}${i.status==="已售出"&&i.soldPrice!=null&&+i.soldPrice!==+i.price?" · 成交 $"+esc(i.soldPrice):""}</small></div>
     <div class="ctl"><select data-s="${esc(i.code)}" aria-label="状态">${STATUSES.map(s=>`<option${s===i.status?" selected":""}>${s}</option>`).join("")}</select>
     <button class="btn small" data-e="${esc(i.code)}">编辑</button></div></div>`}).join("")}).join("");
 }
 function applyStatus(i,s){
   i.status=s;
   if(s==="在售"&&!i.listedAt)i.listedAt=today();
-  if(s==="已售出"){if(!i.soldAt)i.soldAt=today()}else i.soldAt=null;
+  if(s==="已售出"){if(!i.soldAt)i.soldAt=today();if(i.soldPrice==null)i.soldPrice=i.price??null}else{i.soldAt=null;i.soldPrice=null}
 }
 
 function nextCode(){const n=data.items.map(i=>parseInt(String(i.code).replace(/\D/g,""))||0);return "A"+String(Math.max(0,...n)+1).padStart(2,"0")}
@@ -207,7 +224,7 @@ function openEdit(code){
   $("fStatus").innerHTML=STATUSES.map(s=>`<option${s===i.status?" selected":""}>${s}</option>`).join("");
   $("fCat").innerHTML=(i.category?"":`<option value="" selected disabled>请选择分类</option>`)+CATS.map(c=>`<option${c===i.category?" selected":""}>${c}</option>`).join("");
   $("fCode").value=i.code;$("fName").value=i.name||"";$("fPrice").value=i.price??"";$("fCond").value=i.condition||"";
-  $("fNote").value=i.note||"";$("fListed").value=i.listedAt||(editing?"":today());$("fSoldAt").value=i.soldAt||"";
+  $("fNote").value=i.note||"";$("fListed").value=i.listedAt||(editing?"":today());$("fSoldAt").value=i.soldAt||"";$("fSoldPrice").value=i.soldPrice??"";$("spRow").hidden=i.status!=="已售出";
   photos=[...(i.photos||[])];drawThumbs();$("formErr").textContent="";$("upMsg").textContent="";
   $("delBtn").hidden=!editing;$("delBtn").textContent="删除";$("delBtn").dataset.sure="";
   $("edit").showModal();
@@ -237,13 +254,27 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("change",async e=>{
   const code=e.target.dataset&&e.target.dataset.s;if(!code)return;
-  const s=e.target.value;e.target.disabled=true;
+  const s=e.target.value;
+  if(s==="已售出"){
+    const it=data.items.find(i=>i.code===code);
+    $("soldTitle").textContent=`${code} ${it.name} 卖了多少钱？`;$("soldIn").value=it.price??"";
+    $("soldDlg").dataset.code=code;$("soldDlg").showModal();$("soldIn").select();return;
+  }
+  e.target.disabled=true;
   await commit(`${code} → ${s}`,d=>applyStatus(d.items.find(i=>i.code===code),s));
 });
 $("fStatus").onchange=()=>{const s=$("fStatus").value;
   if(s==="在售"&&!$("fListed").value)$("fListed").value=today();
-  if(s==="已售出"&&!$("fSoldAt").value)$("fSoldAt").value=today()};
+  if(s==="已售出"&&!$("fSoldAt").value)$("fSoldAt").value=today();
+  if(s==="已售出"&&$("fSoldPrice").value==="")$("fSoldPrice").value=$("fPrice").value;
+  $("spRow").hidden=s!=="已售出"};
 $("cancel").onclick=()=>$("edit").close();
+$("soldCancel").onclick=()=>{$("soldDlg").close();render()};
+$("soldForm").onsubmit=async e=>{e.preventDefault();
+  const code=$("soldDlg").dataset.code,v=$("soldIn").value;if(v==="")return;
+  $("soldDlg").close();
+  await commit(`${code} → 已售出 $${v}`,d=>{const i=d.items.find(x=>x.code===code);applyStatus(i,"已售出");i.soldPrice=Number(v)});
+};
 $("delBtn").onclick=async()=>{
   if($("delBtn").dataset.sure!=="1"){$("delBtn").dataset.sure="1";$("delBtn").textContent="再点一次确认删除";return}
   const code=editing.code;
@@ -259,6 +290,8 @@ $("form").onsubmit=async e=>{
   const v=$("fPrice").value;
   const item={code,name:$("fName").value.trim(),status:$("fStatus").value,price:v===""?null:Number(v),category:$("fCat").value,
     condition:$("fCond").value.trim(),note:$("fNote").value.trim(),listedAt:$("fListed").value||null,soldAt:$("fSoldAt").value||null,photos:[...photos]};
+  const sp=$("fSoldPrice").value;
+  item.soldPrice=item.status==="已售出"?(sp===""?item.price:Number(sp)):null;
   if(item.status==="已售出"&&!item.soldAt)item.soldAt=today();
   if(item.status!=="已售出")item.soldAt=null;
   $("saveBtn").disabled=true;
