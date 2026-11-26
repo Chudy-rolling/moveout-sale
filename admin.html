@@ -214,6 +214,7 @@ function render(){
 function applyStatus(i,s){
   i.status=s;
   if(s==="在售"&&!i.listedAt)i.listedAt=today();
+  if(s==="在售"&&!i.listedTs)i.listedTs=new Date().toISOString();
   if(s==="已售出"){if(!i.soldAt)i.soldAt=today();if(i.soldPrice==null)i.soldPrice=i.price??null}else{i.soldAt=null;i.soldPrice=null}
 }
 
@@ -295,6 +296,7 @@ $("form").onsubmit=async e=>{
   const item={code,name:$("fName").value.trim(),status:$("fStatus").value,price:v===""?null:Number(v),category:$("fCat").value,
     condition:$("fCond").value.trim(),note:$("fNote").value.trim(),listedAt:$("fListed").value||null,soldAt:$("fSoldAt").value||null,photos:[...photos]};
   const pv=$("fPriv").value.trim();if(pv)item.privateNote=pv;
+  item.listedTs=(editing&&editing.listedTs)||(item.status==="在售"&&item.listedAt?new Date().toISOString():undefined);if(!item.listedTs)delete item.listedTs;
   const sp=$("fSoldPrice").value;
   item.soldPrice=item.status==="已售出"?(sp===""?item.price:Number(sp)):null;
   if(item.status==="已售出"&&!item.soldAt)item.soldAt=today();

@@ -128,7 +128,8 @@ function search(list,q){
 
 const track=(path,title)=>{try{window.goatcounter&&window.goatcounter.count&&window.goatcounter.count({path,title,event:true})}catch(e){}};
 function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2200)}
-function list(){return items.filter(i=>i.status in RANK).sort((a,b)=>RANK[a.status]-RANK[b.status]||a.code.localeCompare(b.code))}
+const lkey=i=>i.listedTs||(i.listedAt?i.listedAt+"T00:00":"");
+function list(){return items.filter(i=>i.status in RANK).sort((a,b)=>RANK[a.status]-RANK[b.status]||lkey(b).localeCompare(lkey(a))||a.code.localeCompare(b.code))}
 
 const xhsOk=u=>typeof u==="string"&&/^https:\/\/(www\.)?(xiaohongshu\.com|xhslink\.com)\//.test(u);
 function render(){
