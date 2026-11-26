@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-25T21:02:27-05:00",
+  "updated": "2026-11-26T02:07:37.234Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -16,19 +16,18 @@
  "items": [
   {
    "code": "A01",
-   "name": "彩叶芋 Caladium+ 做旧陶罐",
+   "name": "彩叶芋 Caladium+ 做旧陶罐 - 明天早上9点来拿",
    "status": "已售出",
    "price": 15,
    "category": "植物/园艺",
-   "condition": "健康，带盆",
+   "condition": "休眠期，带盆",
    "note": "明天早上9点来拿。冬季会休眠掉叶，块茎留土里，来年春天再发；陶罐很出片",
    "listedAt": "2026-11-25",
    "soldAt": "2026-11-25",
    "photos": [
     "img/A01.jpg"
    ],
-   "soldPrice": 15,
-   "privateNote": "11/26 早上9点来拿"
+   "soldPrice": 15
   },
   {
    "code": "A02",
