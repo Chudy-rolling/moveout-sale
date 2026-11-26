@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T02:40:54.041Z",
+  "updated": "2026-11-26T02:41:23.022Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -157,13 +157,14 @@
    "price": 10,
    "category": "植物/园艺",
    "condition": "",
-   "note": "实木多层花架，圆托盘可以旋转调整位置，放墙角很省地方",
+   "note": "圆托盘可以旋转，轮子可调整位置，放墙角很省地方",
    "listedAt": "2026-11-25",
    "soldAt": null,
    "photos": [
     "img/A10.jpg",
     "img/A10-2.jpg"
-   ]
+   ],
+   "soldPrice": null
   },
   {
    "code": "A11",
