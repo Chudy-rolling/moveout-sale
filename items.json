@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T00:54:23.431Z",
+  "updated": "2026-11-26T00:54:32.699Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -129,13 +129,13 @@
   {
    "code": "A09",
    "name": "全光谱 LED 植物生长灯泡 12W",
-   "status": "已售出",
+   "status": "在售",
    "price": 3,
    "category": "植物/园艺",
    "condition": "带原盒",
    "note": "E26 普通灯口，BR30，PPF 25",
    "listedAt": "2026-11-25",
-   "soldAt": "2026-11-25",
+   "soldAt": null,
    "photos": [
     "img/A09.jpg"
    ]
