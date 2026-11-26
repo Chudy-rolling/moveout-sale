@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T00:57:04.522Z",
+  "updated": "2026-11-26T00:58:48.464Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -203,6 +203,20 @@
    "soldAt": null,
    "photos": [
     "img/A14-mwwueat1.jpg"
+   ]
+  },
+  {
+   "code": "A15",
+   "name": "虎尾兰",
+   "status": "在售",
+   "price": 2,
+   "category": "植物/园艺",
+   "condition": "",
+   "note": "",
+   "listedAt": "2026-11-25",
+   "soldAt": null,
+   "photos": [
+    "img/A15-mwwugi3w.jpg"
    ]
   }
  ]
