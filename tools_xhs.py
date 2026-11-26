@@ -14,7 +14,7 @@ base=f"""<style>*{{box-sizing:border-box;margin:0}}body{{width:1080px;font-famil
 .tag:before{{content:"";position:absolute;left:16px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#fff}}</style>"""
 # cover
 picks=[c for c in shop.get('coverPicks',[]) if any(i['code']==c and i['status']!='已售出' for i in items)]
-picks=(picks+[i['code'] for i in on if i['code'] not in picks and i['photos']])[:4]
+picks=(picks+[i['code'] for i in on if i['code'] not in picks and i['photos'] and not i.get('photoLabel')])[:4]
 cells=''.join(f'<div style="position:relative;border-radius:24px;overflow:hidden;background:#eef4ee"><img src="{src(it["photos"][0])}" style="width:100%;height:100%;object-fit:cover;display:block"><span class="tag">${it["price"]}</span></div>' for c in picks for it in [next(x for x in items if x['code']==c)])
 SHORT={'植物/园艺':'植物园艺','家居装饰':'家居装饰','电器/数码':'电器数码','服饰鞋包':'服饰鞋包','书/文具':'书和文具'}
 cats=[]
@@ -33,7 +33,7 @@ cover=f"""<html><head><meta charset=utf-8>{base}</head><body style="height:1440p
 rows=''
 for i in items:
     sold=i['status']=='已售出'
-    ph=f'<img src="{src(i["photos"][0])}" style="width:220px;height:220px;object-fit:cover;border-radius:18px;display:block;{"filter:grayscale(1);opacity:.5" if sold else ""}">' if i['photos'] else '<div style="width:220px;height:220px;border-radius:18px;background:#eef4ee"></div>'
+    ph=(f'<div style="position:relative;line-height:0"><img src="{src(i["photos"][0])}" style="width:220px;height:220px;object-fit:cover;border-radius:18px;display:block;{"filter:grayscale(1);opacity:.5" if sold else ""}">'+(f'<span style="position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.6);color:#fff;font-size:20px;line-height:1.3;padding:3px 10px;border-radius:999px">{e(i["photoLabel"])}</span>' if i.get('photoLabel') else '')+'</div>') if i['photos'] else '<div style="width:220px;height:220px;border-radius:18px;background:#eef4ee"></div>'
     badge='<span style="background:#d9ead9;color:#1f5130;font-size:28px;padding:4px 16px;border-radius:999px">已售出</span>' if sold else ('<span style="background:#fbe3c8;color:#7a3e05;font-size:28px;padding:4px 16px;border-radius:999px">已预订</span>' if i['status']=='已预订' else '')
     rows+=f"""<div style="display:flex;gap:34px;align-items:center;padding:28px 0;border-bottom:2px solid #e3ebe4;{"opacity:.6" if sold else ""}">{ph}
 <div style="flex:1;display:grid;gap:10px"><div style="display:flex;gap:14px;align-items:center"><span style="background:#1d4a33;color:#fff;font-size:28px;padding:2px 14px;border-radius:8px">{e(i['code'])}</span>{badge}</div>

@@ -43,6 +43,7 @@ button:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
 .ph .none{position:absolute;inset:0;display:grid;place-items:center;color:var(--mute);font-size:14px}
 .tag{position:absolute;top:12px;left:12px;background:var(--terra);color:#fff;font-weight:700;padding:5px 12px 5px 22px;border-radius:4px 10px 10px 4px;font-size:17px;white-space:nowrap}
 .tag::before{content:"";position:absolute;left:8px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:var(--card)}
+.ref{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:2px 8px;border-radius:999px}
 .code{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:2px 8px;border-radius:999px}
 .info{padding:12px 14px 16px;display:grid;gap:4px}
 .info strong{font-size:16px;line-height:1.35}
@@ -147,7 +148,7 @@ function render(){
   $("grid").innerHTML=shown.length?shown.map(i=>{const p=(i.photos||[])[0],sold=i.status==="已售出";
     return `<button class="item${sold?" sold":""}" data-code="${esc(i.code)}">
     <div class="ph">${p?`<img src="${esc(p)}" alt="${esc(i.name)}" loading="lazy">`:`<div class="none">照片稍后补上</div>`}
-    <span class="tag">${esc(money(i.price))}</span><span class="code">${esc(i.code)}</span>
+    <span class="tag">${esc(money(i.price))}</span><span class="code">${esc(i.code)}</span>${i.photoLabel?`<span class="ref">${esc(i.photoLabel)}</span>`:""}
     ${sold?`<div class="stamp"><span>已售出</span></div>`:""}</div>
     <div class="info"><strong>${esc(i.name)}</strong>${i.condition?`<small>${esc(i.condition)}</small>`:""}${i.note?`<span class="desc">${esc(i.note)}</span>`:""}
     ${i.status==="已预订"?`<span class="st res">已预订</span>`:""}</div></button>`}).join(""):`<div class="empty">${query?"没找到相关的东西，换个说法试试，或者私信问我":"这个分类暂时没有在售的东西。"}</div>`;
@@ -160,7 +161,7 @@ function openView(code){
   track("查看-"+i.code,i.name);
   const sold=i.status==="已售出";
   const msg=`你好！想要 ${i.code} ${i.name}（${money(i.price)}），请问什么时候方便交易？`;
-  $("viewBody").innerHTML=`${(i.photos||[]).length?`<div class="shots">${i.photos.map(p=>`<img src="${esc(p)}" alt="">`).join("")}</div>`:""}
+  $("viewBody").innerHTML=`${(i.photos||[]).length?`<div class="shots">${i.photos.map(p=>`<img src="${esc(p)}" alt="">`).join("")}</div>`:""}${i.photoLabel?`<p style="margin:0;font-size:13px;color:var(--mute)">照片说明：${esc(i.photoLabel)}</p>`:""}
   <div class="row" style="justify-content:space-between"><h2 style="font-size:24px">${esc(i.name)}</h2><span class="price">${esc(money(i.price))}</span></div>
   <div class="row"><span class="st${i.status==="已预订"?" res":""}">${esc(i.status)}</span><small style="color:var(--mute)">${esc(i.code)} · ${esc(i.category)}${i.condition?" · "+esc(i.condition):""}</small></div>
   ${i.note?`<p style="margin:0">${esc(i.note)}</p>`:""}
