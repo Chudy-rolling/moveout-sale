@@ -16,7 +16,7 @@ base=f"""<style>*{{box-sizing:border-box;margin:0}}body{{width:1080px;font-famil
 picks=[c for c in shop.get('coverPicks',[]) if any(i['code']==c and i['status']!='已售出' for i in items)]
 picks=(picks+[i['code'] for i in on if i['code'] not in picks and i['photos']])[:4]
 cells=''.join(f'<div style="position:relative;border-radius:24px;overflow:hidden;background:#eef4ee"><img src="{src(it["photos"][0])}" style="width:100%;height:100%;object-fit:cover;display:block"><span class="tag">${it["price"]}</span></div>' for c in picks for it in [next(x for x in items if x['code']==c)])
-SHORT={'植物/园艺':'植物园艺','电器/数码':'电器数码','服饰鞋包':'服饰鞋包','书/文具':'书和文具'}
+SHORT={'植物/园艺':'植物园艺','家居装饰':'家居装饰','电器/数码':'电器数码','服饰鞋包':'服饰鞋包','书/文具':'书和文具'}
 cats=[]
 for i in on:
     c=i['category']

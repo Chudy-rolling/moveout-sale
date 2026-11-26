@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T02:07:37.234Z",
+  "updated": "2026-11-25T21:26:31-05:00",
   "coverPicks": [
    "A10",
    "A02",
@@ -233,6 +233,96 @@
    ]
   },
   {
+   "code": "H01",
+   "name": "凹凸点纹玻璃花瓶（大）",
+   "price": 4,
+   "category": "家居装饰",
+   "condition": "内壁底部有一点水渍",
+   "note": "约 20cm 高，透明厚玻璃，收腰造型",
+   "status": "待上架",
+   "listedAt": null,
+   "soldAt": null,
+   "photos": [
+    "img/H01.jpg"
+   ],
+   "privateNote": "草稿：确认后改成在售"
+  },
+  {
+   "code": "H02",
+   "name": "焦糖色釉陶瓷壶 + 干花",
+   "price": 8,
+   "category": "家居装饰",
+   "condition": "",
+   "note": "约 23cm 高（不含花），带把手的复古陶壶，可当花瓶或水壶，干花一起送",
+   "status": "待上架",
+   "listedAt": null,
+   "soldAt": null,
+   "photos": [
+    "img/H02.jpg"
+   ],
+   "privateNote": "草稿：确认后改成在售"
+  },
+  {
+   "code": "H03",
+   "name": "Godinger Dublin 水晶玻璃细口花瓶",
+   "price": 6,
+   "category": "家居装饰",
+   "condition": "内壁有一点水渍",
+   "note": "约 18cm 高，切面雕花带底座，适合插一两枝花；原价约 $20",
+   "status": "待上架",
+   "listedAt": null,
+   "soldAt": null,
+   "photos": [
+    "img/H03.jpg"
+   ],
+   "privateNote": "草稿：确认后改成在售"
+  },
+  {
+   "code": "H04",
+   "name": "百加得空酒瓶（375ml）",
+   "price": 0,
+   "category": "家居装饰",
+   "condition": "",
+   "note": "玻璃很透，可以当花瓶或做装饰",
+   "status": "待上架",
+   "listedAt": null,
+   "soldAt": null,
+   "photos": [
+    "img/H04.jpg"
+   ],
+   "privateNote": "草稿：确认后改成在售"
+  },
+  {
+   "code": "K01",
+   "name": "IKEA BEHÖVD 保温壶 1L（薄荷绿）",
+   "price": 3,
+   "category": "厨房",
+   "condition": "",
+   "note": "一键按压出水，保温保冷约 6 小时，约 30cm 高",
+   "status": "待上架",
+   "listedAt": null,
+   "soldAt": null,
+   "photos": [
+    "img/K01.jpg"
+   ],
+   "privateNote": "草稿：确认后改成在售"
+  },
+  {
+   "code": "K02",
+   "name": "Amazon Basics 不锈钢电热水壶 1L",
+   "price": 8,
+   "category": "厨房",
+   "condition": "外壳有使用痕迹，功能正常",
+   "note": "1500W，自动断电，带水位窗；原价约 $20–25",
+   "status": "待上架",
+   "listedAt": null,
+   "soldAt": null,
+   "photos": [
+    "img/K02.jpg"
+   ],
+   "privateNote": "草稿：确认后改成在售"
+  },
+  {
    "code": "E01",
    "name": "唱片机",
    "status": "在售",
@@ -255,6 +345,21 @@
    "listedAt": null,
    "soldAt": null,
    "photos": []
+  },
+  {
+   "code": "E03",
+   "name": "电动去毛球器",
+   "price": 4,
+   "category": "电器/数码",
+   "condition": "",
+   "note": "白灰配色，透明集屑仓",
+   "status": "待上架",
+   "listedAt": null,
+   "soldAt": null,
+   "photos": [
+    "img/E03.jpg"
+   ],
+   "privateNote": "草稿：确认后改成在售"
   }
  ]
 }

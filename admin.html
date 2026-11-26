@@ -123,13 +123,13 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
 {
 const OWNER="Chudy-rolling",REPO="moveout-sale",API=`https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
 const STATUSES=["待上架","在售","已预订","已售出","送人/自留"];
-const CATS=["植物/园艺","家具","电器/数码","厨房","服饰鞋包","书/文具","其他"];
+const CATS=["植物/园艺","家居装饰","家具","电器/数码","厨房","服饰鞋包","书/文具","其他"];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 const md=s=>s?(+s.slice(5,7))+"/"+(+s.slice(8,10)):"";
 let token="",data=null,sha="",editing=null,photos=[],busy=false,query="";
-const SYN={"花":"植物","绿植":"植物","盆栽":"植物","草":"植物","肥":"肥料 液体肥","肥料":"肥","化肥":"肥","营养土":"土","植料":"土","营养液":"液体肥","灯":"灯泡 led","补光":"生长灯","水壶":"浇水壶","浇花":"浇水壶","浇水":"浇水壶","喷壶":"浇水壶","架子":"架","花架":"植物架","黑胶":"唱片","音乐":"唱片 唱片机","音响":"唱片机","播放器":"唱片机","家电":"电器","土":"土 植料 珍珠岩","工具":"园艺套装","宜家":"ikea","绿萝":"pothos","免费送":"免费"};
+const SYN={"花":"植物","绿植":"植物","盆栽":"植物","草":"植物","肥":"肥料 液体肥","肥料":"肥","化肥":"肥","营养土":"土","植料":"土","营养液":"液体肥","灯":"灯泡 led","补光":"生长灯","水壶":"浇水壶","浇花":"浇水壶","浇水":"浇水壶","喷壶":"浇水壶","架子":"架","花架":"植物架","黑胶":"唱片","音乐":"唱片 唱片机","音响":"唱片机","播放器":"唱片机","家电":"电器","花瓶":"花瓶 瓶","摆件":"家居装饰","装饰":"家居装饰","热水壶":"电热水壶","烧水":"电热水壶","保温杯":"保温壶","毛球":"去毛球器","酒瓶":"空酒瓶","土":"土 植料 珍珠岩","工具":"园艺套装","宜家":"ikea","绿萝":"pothos","免费送":"免费"};
 const norm=s=>String(s??"").toLowerCase().replace(/[！-～]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xfee0)).replace(/[\s,，。、;；:：()（）\-_/·.]+/g,"");
 function hay(i){return norm([i.code,i.name,i.category,i.condition,i.note,i.status,+i.price===0?"免费":""].join(" "))}
 function search(list,q){
@@ -217,7 +217,7 @@ function applyStatus(i,s){
   if(s==="已售出"){if(!i.soldAt)i.soldAt=today();if(i.soldPrice==null)i.soldPrice=i.price??null}else{i.soldAt=null;i.soldPrice=null}
 }
 
-const PREFIX={"植物/园艺":"A","电器/数码":"E","家具":"F","厨房":"K","服饰鞋包":"C","书/文具":"B","其他":"X"};
+const PREFIX={"植物/园艺":"A","家居装饰":"H","电器/数码":"E","家具":"F","厨房":"K","服饰鞋包":"C","书/文具":"B","其他":"X"};
 function nextCode(cat){const p=PREFIX[cat];if(!p)return "";const n=data.items.filter(i=>String(i.code).startsWith(p)).map(i=>parseInt(String(i.code).slice(1))||0);return p+String(Math.max(0,...n)+1).padStart(2,"0")}
 let autoCode="";
 function openEdit(code){
