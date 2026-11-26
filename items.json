@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T02:42:46.522Z",
+  "updated": "2026-11-26T02:43:01.806Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -51,14 +51,14 @@
    "price": 4,
    "category": "植物/园艺",
    "condition": "健康，带盆",
-   "note": "2–3天浇一次水，可以直接摘来泡水",
+   "note": "2–3天浇一次水",
    "listedAt": "2026-11-25",
    "soldAt": "2026-11-25",
    "photos": [
     "img/A03.jpg"
    ],
-   "soldPrice": 4,
-   "privateNote": "11/26 早上9点来拿"
+   "privateNote": "11/26 早上9点来拿",
+   "soldPrice": 4
   },
   {
    "code": "A04",
