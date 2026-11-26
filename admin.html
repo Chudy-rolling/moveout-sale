@@ -92,6 +92,7 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
   <div class="two"><label>定价 ($)<input id="fPrice" type="number" min="0" step="1" inputmode="decimal"></label><label>分类<select id="fCat"></select></label></div>
   <label>新旧程度<input id="fCond"></label>
   <label>描述（买家可见）<textarea id="fNote"></textarea></label>
+  <label>私人备注（买家页不显示，比如取货时间）<input id="fPriv"></label>
   <label id="spRow">成交价 ($)（只有你在卖家端看得到）<input id="fSoldPrice" type="number" min="0" step="1" inputmode="decimal"></label>
   <div class="two"><label>上架日期<input id="fListed" type="date"></label><label>售出日期<input id="fSoldAt" type="date"></label></div>
   <div><div class="hint" style="margin-bottom:6px">照片（第一张是封面）</div><div class="thumbs" id="thumbs"></div>
@@ -206,7 +207,7 @@ function render(){
     return `<div class="grp">${names[k]}（${rows.length}）</div>`+rows.map(i=>{const p=imgSrc((i.photos||[])[0]||"");
     return `<div class="arow">${p?`<img src="${esc(p)}" alt="">`:`<div class="th"></div>`}
     <div class="meta"><strong>${esc(i.code)} ${esc(i.name)}</strong>
-    <small>${i.price!=null?"$"+esc(i.price):"未定价"}${i.listedAt?" · 上架 "+esc(md(i.listedAt)):""}${i.soldAt?" · 售出 "+esc(md(i.soldAt)):""}${i.status==="已售出"&&i.soldPrice!=null&&+i.soldPrice!==+i.price?" · 成交 $"+esc(i.soldPrice):""}</small></div>
+    <small>${i.price!=null?"$"+esc(i.price):"未定价"}${i.listedAt?" · 上架 "+esc(md(i.listedAt)):""}${i.soldAt?" · 售出 "+esc(md(i.soldAt)):""}${i.status==="已售出"&&i.soldPrice!=null&&+i.soldPrice!==+i.price?" · 成交 $"+esc(i.soldPrice):""}</small>${i.privateNote?`<small style="color:var(--terra)">备注：${esc(i.privateNote)}</small>`:""}</div>
     <div class="ctl"><select data-s="${esc(i.code)}" aria-label="状态">${STATUSES.map(s=>`<option${s===i.status?" selected":""}>${s}</option>`).join("")}</select>
     <button class="btn small" data-e="${esc(i.code)}">编辑</button></div></div>`}).join("")}).join("");
 }
@@ -226,7 +227,7 @@ function openEdit(code){
   $("fStatus").innerHTML=STATUSES.map(s=>`<option${s===i.status?" selected":""}>${s}</option>`).join("");
   $("fCat").innerHTML=(i.category?"":`<option value="" selected disabled>请选择分类</option>`)+CATS.map(c=>`<option${c===i.category?" selected":""}>${c}</option>`).join("");
   $("fCode").value=i.code;$("fName").value=i.name||"";$("fPrice").value=i.price??"";$("fCond").value=i.condition||"";
-  $("fNote").value=i.note||"";$("fListed").value=i.listedAt||(editing?"":today());$("fSoldAt").value=i.soldAt||"";$("fSoldPrice").value=i.soldPrice??"";$("spRow").hidden=i.status!=="已售出";
+  $("fNote").value=i.note||"";$("fListed").value=i.listedAt||(editing?"":today());$("fSoldAt").value=i.soldAt||"";$("fSoldPrice").value=i.soldPrice??"";$("fPriv").value=i.privateNote||"";$("spRow").hidden=i.status!=="已售出";
   photos=[...(i.photos||[])];drawThumbs();$("formErr").textContent="";$("upMsg").textContent="";
   $("delBtn").hidden=!editing;$("delBtn").textContent="删除";$("delBtn").dataset.sure="";
   $("edit").showModal();
@@ -293,6 +294,7 @@ $("form").onsubmit=async e=>{
   const v=$("fPrice").value;
   const item={code,name:$("fName").value.trim(),status:$("fStatus").value,price:v===""?null:Number(v),category:$("fCat").value,
     condition:$("fCond").value.trim(),note:$("fNote").value.trim(),listedAt:$("fListed").value||null,soldAt:$("fSoldAt").value||null,photos:[...photos]};
+  const pv=$("fPriv").value.trim();if(pv)item.privateNote=pv;
   const sp=$("fSoldPrice").value;
   item.soldPrice=item.status==="已售出"?(sp===""?item.price:Number(sp)):null;
   if(item.status==="已售出"&&!item.soldAt)item.soldAt=today();
