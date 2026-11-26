@@ -61,3 +61,31 @@ async def render():
         await b.close()
 asyncio.run(render())
 print('ok',picks,len(items),os.path.join(out,'cover.png'),os.path.join(out,'list.png'))
+
+# ---- themed set card: python3 tools_xhs.py OUT --set 标题 CODE1,CODE2,... ----
+if '--set' in sys.argv:
+    k=sys.argv.index('--set'); title=sys.argv[k+1]; codes=sys.argv[k+2].split(',')
+    sel=[next(i for i in d['items'] if i['code']==c) for c in codes]
+    price=lambda p:'免费' if p==0 else f'${p}'
+    lo=min(i['price'] for i in sel); n=len(sel)
+    cols=2; rows=(n+1)//2; rh=500 if rows<=2 else 340
+    cells=''.join(f'''<div style="display:grid;grid-template-rows:{rh-86}px 86px;background:#fff;border-radius:24px;overflow:hidden">
+<div style="position:relative;background:#eef4ee"><img src="{src(i['photos'][0])}" style="width:100%;height:100%;object-fit:cover;display:block"><span class="tag">{price(i['price'])}</span>
+<span style="position:absolute;left:18px;bottom:16px;background:rgba(0,0,0,.55);color:#fff;font-size:26px;padding:2px 14px;border-radius:999px">{e(i['code'])}</span></div>
+<div style="padding:0 22px;display:flex;align-items:center;font-size:30px;font-weight:700;color:#18241d;line-height:1.2">{e(i.get('short') or i['name'][:12])}</div></div>''' for i in sel)
+    lo_txt='免费起' if lo==0 else f'${lo} 起'
+    html_=f"""<html><head><meta charset=utf-8>{base}</head><body style="height:1440px;background:#1d4a33;color:#f1f7f2;padding:60px 56px">
+<div style="font-size:32px;opacity:.85;letter-spacing:2px">毕业回国 · JSQ 出闲置二手</div>
+<div style="font-family:{SERIF};font-weight:700;font-size:104px;line-height:1.1;margin-top:18px">{e(title)}</div>
+<div style="display:flex;gap:16px;margin-top:24px;align-items:center"><span style="background:#d85f35;color:#fff;font-size:40px;font-weight:700;padding:6px 24px;border-radius:999px">{lo_txt}</span><span style="font-size:36px">{n} 件 · Journal Square 自提</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:{rh}px;gap:20px;margin-top:40px">{cells}</div>
+</body></html>"""
+    fn=os.path.join(out,'set.html'); open(fn,'w').write(html_)
+    async def r2():
+        async with async_playwright() as p:
+            exe='/usr/bin/google-chrome' if os.path.exists('/usr/bin/google-chrome') else None
+            b=await p.chromium.launch(executable_path=exe) if exe else await p.chromium.launch()
+            pg=await b.new_page(viewport={'width':1080,'height':1440})
+            await pg.goto('file://'+os.path.abspath(fn)); await pg.wait_for_timeout(800)
+            await pg.screenshot(path=os.path.join(out,'set.png')); await b.close()
+    asyncio.run(r2()); print('set',os.path.join(out,'set.png'))

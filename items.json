@@ -265,7 +265,8 @@
     "img/H01.jpg"
    ],
    "soldPrice": null,
-   "listedTs": "2026-11-25T21:30:00-05:00"
+   "listedTs": "2026-11-25T21:30:00-05:00",
+   "short": "凹凸点纹玻璃花瓶"
   },
   {
    "code": "H02",
@@ -281,7 +282,8 @@
     "img/H02.jpg"
    ],
    "soldPrice": null,
-   "listedTs": "2026-11-25T21:30:00-05:00"
+   "listedTs": "2026-11-25T21:30:00-05:00",
+   "short": "焦糖釉复古陶瓷壶"
   },
   {
    "code": "H03",
@@ -297,7 +299,8 @@
     "img/H03.jpg"
    ],
    "soldPrice": null,
-   "listedTs": "2026-11-25T21:30:00-05:00"
+   "listedTs": "2026-11-25T21:30:00-05:00",
+   "short": "Dublin 水晶细口瓶"
   },
   {
    "code": "H04",
@@ -313,7 +316,8 @@
     "img/H04.jpg"
    ],
    "soldPrice": null,
-   "listedTs": "2026-11-25T21:30:00-05:00"
+   "listedTs": "2026-11-25T21:30:00-05:00",
+   "short": "百加得空瓶"
   },
   {
    "code": "K01",
