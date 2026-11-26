@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T01:48:15.732Z",
+  "updated": "2026-11-26T01:48:21.913Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -62,16 +62,17 @@
   {
    "code": "A04",
    "name": "绿萝 Pothos（透明育苗盆）",
-   "status": "在售",
+   "status": "已售出",
    "price": 2,
    "category": "植物/园艺",
    "condition": "健康",
    "note": "叶片偏银蓝色，长藤一根，好养",
    "listedAt": "2026-11-25",
-   "soldAt": null,
+   "soldAt": "2026-11-25",
    "photos": [
     "img/A04.jpg"
-   ]
+   ],
+   "soldPrice": 2
   },
   {
    "code": "A05",
