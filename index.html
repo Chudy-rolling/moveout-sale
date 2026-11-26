@@ -46,6 +46,7 @@ button:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
 .code{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:2px 8px;border-radius:999px}
 .info{padding:12px 14px 16px;display:grid;gap:4px}
 .info strong{font-size:16px;line-height:1.35}
+.desc{font-size:13px;line-height:1.45;color:var(--ink);opacity:.8;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .info small{color:var(--mute);font-size:13px}
 .st{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--sage);justify-self:start}
 .st.res{background:#fbe3c8;color:#7a3e05}
@@ -147,7 +148,7 @@ function render(){
     <div class="ph">${p?`<img src="${esc(p)}" alt="${esc(i.name)}" loading="lazy">`:`<div class="none">照片稍后补上</div>`}
     <span class="tag">${esc(money(i.price))}</span><span class="code">${esc(i.code)}</span>
     ${sold?`<div class="stamp"><span>已售出</span></div>`:""}</div>
-    <div class="info"><strong>${esc(i.name)}</strong>${i.condition?`<small>${esc(i.condition)}</small>`:""}
+    <div class="info"><strong>${esc(i.name)}</strong>${i.condition?`<small>${esc(i.condition)}</small>`:""}${i.note?`<span class="desc">${esc(i.note)}</span>`:""}
     ${i.status==="已预订"?`<span class="st res">已预订</span>`:""}</div></button>`}).join(""):`<div class="empty">${query?"没找到相关的东西，换个说法试试，或者私信问我":"这个分类暂时没有在售的东西。"}</div>`;
   const upd=shop.updated?new Date(shop.updated).toLocaleString("zh-CN",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"";
   $("foot").textContent=(shop.contact?`想要哪件？点开物品复制消息，私信 ${shop.contact}。`:"想要哪件？点开物品复制消息，去小红书私信我。")+(upd?` 最后更新：${upd}`:"");
