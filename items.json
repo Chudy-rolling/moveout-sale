@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T02:31:37.176Z",
+  "updated": "2026-11-26T02:32:05.891Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -265,17 +265,17 @@
   {
    "code": "H03",
    "name": "Godinger Dublin 水晶玻璃细口花瓶",
+   "status": "在售",
    "price": 6,
    "category": "家居装饰",
-   "condition": "内壁有一点水渍",
-   "note": "约 18cm 高，切面雕花带底座，适合插一两枝花；原价约 $20",
-   "status": "待上架",
-   "listedAt": null,
+   "condition": "",
+   "note": "切面雕花带底座，适合插一两枝花",
+   "listedAt": "2026-11-25",
    "soldAt": null,
    "photos": [
     "img/H03.jpg"
    ],
-   "privateNote": "草稿：确认后改成在售"
+   "soldPrice": null
   },
   {
    "code": "H04",
