@@ -97,7 +97,8 @@ dialog::backdrop{background:rgba(10,20,14,.55)}
   <div class="two"><label>上架日期<input id="fListed" type="date"></label><label>售出日期<input id="fSoldAt" type="date"></label></div>
   <div><div class="hint" style="margin-bottom:6px">照片（第一张是封面）</div><div class="thumbs" id="thumbs"></div>
     <label class="btn small" style="display:inline-flex;margin-top:8px;cursor:pointer;width:auto">上传照片<input type="file" id="file" accept="image/*" multiple hidden></label>
-    <span class="hint" id="upMsg"></span></div>
+    <span class="hint" id="upMsg"></span>
+    <label style="margin-top:8px">照片标注（可选，比如「参考图，非实拍」）<input id="fPhotoLabel"></label></div>
   <div class="err" id="formErr"></div>
   <div class="row" style="justify-content:space-between">
     <button type="button" class="btn" id="delBtn">删除</button>
@@ -228,7 +229,7 @@ function openEdit(code){
   $("fStatus").innerHTML=STATUSES.map(s=>`<option${s===i.status?" selected":""}>${s}</option>`).join("");
   $("fCat").innerHTML=(i.category?"":`<option value="" selected disabled>请选择分类</option>`)+CATS.map(c=>`<option${c===i.category?" selected":""}>${c}</option>`).join("");
   $("fCode").value=i.code;$("fName").value=i.name||"";$("fPrice").value=i.price??"";$("fCond").value=i.condition||"";
-  $("fNote").value=i.note||"";$("fListed").value=i.listedAt||(editing?"":today());$("fSoldAt").value=i.soldAt||"";$("fSoldPrice").value=i.soldPrice??"";$("fPriv").value=i.privateNote||"";$("spRow").hidden=i.status!=="已售出";
+  $("fNote").value=i.note||"";$("fListed").value=i.listedAt||(editing?"":today());$("fSoldAt").value=i.soldAt||"";$("fSoldPrice").value=i.soldPrice??"";$("fPriv").value=i.privateNote||"";$("fPhotoLabel").value=i.photoLabel||"";$("spRow").hidden=i.status!=="已售出";
   photos=[...(i.photos||[])];drawThumbs();$("formErr").textContent="";$("upMsg").textContent="";
   $("delBtn").hidden=!editing;$("delBtn").textContent="删除";$("delBtn").dataset.sure="";
   $("edit").showModal();
@@ -293,9 +294,10 @@ $("form").onsubmit=async e=>{
   if(!$("fCat").value){$("formErr").textContent="选一下分类";return}
   if((!editing||editing.code!==code)&&data.items.some(i=>i.code===code)){$("formErr").textContent="这个编号已经有了";return}
   const v=$("fPrice").value;
-  const item={code,name:$("fName").value.trim(),status:$("fStatus").value,price:v===""?null:Number(v),category:$("fCat").value,
+  const item={...(editing||{}),code,name:$("fName").value.trim(),status:$("fStatus").value,price:v===""?null:Number(v),category:$("fCat").value,
     condition:$("fCond").value.trim(),note:$("fNote").value.trim(),listedAt:$("fListed").value||null,soldAt:$("fSoldAt").value||null,photos:[...photos]};
-  const pv=$("fPriv").value.trim();if(pv)item.privateNote=pv;
+  const pv=$("fPriv").value.trim();if(pv)item.privateNote=pv;else delete item.privateNote;
+  const pl=$("fPhotoLabel").value.trim();if(pl)item.photoLabel=pl;else delete item.photoLabel;
   item.listedTs=(editing&&editing.listedTs)||(item.status==="在售"&&item.listedAt?new Date().toISOString():undefined);if(!item.listedTs)delete item.listedTs;
   const sp=$("fSoldPrice").value;
   item.soldPrice=item.status==="已售出"?(sp===""?item.price:Number(sp)):null;
