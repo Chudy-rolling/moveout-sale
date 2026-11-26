@@ -193,6 +193,8 @@ document.addEventListener("click",e=>{
 $("qrClose").onclick=()=>$("qrDlg").close();
 $("qrDlg").addEventListener("click",e=>{if(e.target===$("qrDlg"))$("qrDlg").close()});
 let qt;$("q").addEventListener("input",e=>{clearTimeout(qt);qt=setTimeout(()=>{query=e.target.value;render();if(query.trim().length>1)track("搜索-"+query.trim(),query.trim())},250)});
+let taps=0,tapT;$("title").addEventListener("click",()=>{taps++;clearTimeout(tapT);tapT=setTimeout(()=>taps=0,1500);
+  if(taps>=5){taps=0;try{const off=localStorage.getItem("skipgc")==="t";if(off){localStorage.removeItem("skipgc");window.__noTrack=false;toast("已恢复统计这台设备")}else{localStorage.setItem("skipgc","t");window.__noTrack=true;toast("好的，这台设备的访问不再统计")}}catch(e){toast("这台设备不支持")}}});
 $("view").addEventListener("click",e=>{if(e.target===$("view"))$("view").close()});
 
 fetch("items.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(d=>{items=d.items||[];shop=d.shop||{};render()})
