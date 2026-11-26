@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T02:33:36.274Z",
+  "updated": "2026-11-26T02:34:35.611Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -310,17 +310,17 @@
   {
    "code": "K02",
    "name": "Amazon Basics 不锈钢电热水壶 1L",
-   "price": 8,
+   "status": "在售",
+   "price": 5,
    "category": "厨房",
    "condition": "外壳有使用痕迹，功能正常",
-   "note": "1500W，自动断电，带水位窗；原价约 $20–25",
-   "status": "待上架",
-   "listedAt": null,
+   "note": "1500W，自动断电，带水位窗",
+   "listedAt": "2026-11-25",
    "soldAt": null,
    "photos": [
     "img/K02.jpg"
    ],
-   "privateNote": "草稿：确认后改成在售"
+   "soldPrice": null
   },
   {
    "code": "E01",
