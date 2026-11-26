@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-25T21:58:24-05:00",
+  "updated": "2026-11-25T22:01:39-05:00",
   "coverPicks": [
    "A10",
    "A02",
@@ -402,6 +402,22 @@
     "img/H05-ref.jpg"
    ],
    "photoLabel": "参考图，非实拍"
+  },
+  {
+   "code": "F01",
+   "name": "顶天立地伸缩杆隔断帘（全套）",
+   "status": "在售",
+   "price": 5,
+   "category": "家具",
+   "condition": "",
+   "note": "免打孔，杆子顶在天花板和地面之间，可伸缩调高度；白色杆子 + 米灰色帘子，适合隔出床位或分隔房间",
+   "listedAt": "2026-11-25",
+   "listedTs": "2026-11-25T22:01:39-05:00",
+   "soldAt": null,
+   "photos": [
+    "img/F01-ref.jpg"
+   ],
+   "photoLabel": "参考图，非实拍（实物杆子为白色）"
   }
  ]
 }
