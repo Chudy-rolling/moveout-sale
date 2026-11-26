@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-26T02:32:05.891Z",
+  "updated": "2026-11-26T02:32:35.326Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -280,17 +280,17 @@
   {
    "code": "H04",
    "name": "百加得空酒瓶（375ml）",
+   "status": "在售",
    "price": 0,
    "category": "家居装饰",
    "condition": "",
-   "note": "玻璃很透，可以当花瓶或做装饰",
-   "status": "待上架",
-   "listedAt": null,
+   "note": "免费送，可以当花瓶或做装饰",
+   "listedAt": "2026-11-25",
    "soldAt": null,
    "photos": [
     "img/H04.jpg"
    ],
-   "privateNote": "草稿：确认后改成在售"
+   "soldPrice": null
   },
   {
    "code": "K01",
