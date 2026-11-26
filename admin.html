@@ -199,8 +199,8 @@ function render(){
     Object.entries(byCat).map(([c,v])=>`<div class="row" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)"><span>${esc(c)}（${v.n} 件）</span><b>$${v.r}</b></div>`).join("")+
     `<div style="margin-top:12px;display:grid;gap:4px">${[...sold].sort((a,b)=>String(b.soldAt).localeCompare(String(a.soldAt))).map(i=>`<div class="row hint" style="justify-content:space-between"><span>${esc(md(i.soldAt))} ${esc(i.code)} ${esc(i.name)}</span><span>$${esc(got(i))}${i.price!=null&&+got(i)!==+i.price?`（标价 $${esc(i.price)}）`:""}</span></div>`).join("")}</div>`
     :`<p class="hint">还没有卖出的东西。</p>`;
-  const groups=[["在售","已预订"],["待上架"],["已售出","送人/自留"]];
-  const names=["在售 / 已预订","待上架","已售出 / 送人"];
+  const groups=[["已预订"],["在售"],["待上架"],["已售出","送人/自留"]];
+  const names=["已预订","在售","待上架","已售出 / 送人"];
   $("list").innerHTML=groups.map((g,k)=>{const rows=search(it.filter(i=>g.includes(i.status)),query).sort((a,b)=>a.code.localeCompare(b.code));
     if(!rows.length)return"";
     return `<div class="grp">${names[k]}（${rows.length}）</div>`+rows.map(i=>{const p=imgSrc((i.photos||[])[0]||"");
