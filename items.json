@@ -4,7 +4,7 @@
   "sub": "毕业回国，植物、家具和生活好物低价转出，先到先得",
   "pickup": "Jersey City · Journal Square PATH 站附近自提",
   "contact": "小红书号 9491806204",
-  "updated": "2026-11-25T21:26:31-05:00",
+  "updated": "2026-11-26T02:28:34.695Z",
   "coverPicks": [
    "A10",
    "A02",
@@ -349,17 +349,18 @@
   {
    "code": "E03",
    "name": "电动去毛球器",
+   "status": "待上架",
    "price": 4,
    "category": "电器/数码",
    "condition": "",
-   "note": "白灰配色，透明集屑仓",
-   "status": "待上架",
-   "listedAt": null,
+   "note": "原盒和配件都在",
+   "listedAt": "2026-11-25",
    "soldAt": null,
    "photos": [
     "img/E03.jpg"
    ],
-   "privateNote": "草稿：确认后改成在售"
+   "privateNote": "草稿：确认后改成在售",
+   "soldPrice": null
   }
  ]
 }
